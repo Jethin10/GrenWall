@@ -1,19 +1,25 @@
 /**
- * Grenwall Systems design tokens — near-monochrome black & bone theme,
- * built to the caliber of steven.com's intro and podium.global's world.
- * Single source of truth for values also mirrored in `tailwind.config.js`
- * (Tailwind can't import .ts at config time, so keep the two in sync by hand).
+ * Grenwall Systems design tokens — deep space-black with a warm accretion
+ * glow, built around the black-hole centerpiece (steven.com intro energy,
+ * podium.global world). Single source of truth for values also mirrored in
+ * `tailwind.config.js` (Tailwind can't import .ts at config time, so keep
+ * the two in sync by hand).
  */
 
 export const colors = {
-  void: '#08080A', // near-black background, never pure #000
-  surface: '#121214', // raised panels / tiles
-  bone: '#F2EFE7', // warm bone white text, never pure #FFF
-  muted: '#5F5F5C', // secondary text, labels
-  line: '#242428', // hairlines, crop marks
-  ember: '#D8823A', // the one restrained accent — used sparingly
+  void: '#050506', // near-true black — deep space, never pure #000
+  surface: '#0E0E10', // raised panels / tiles
+  bone: '#F3EFE6', // warm bone white text, never pure #FFF
+  muted: '#5C5C58', // secondary text, labels
+  line: '#202024', // hairlines, crop marks
+  ember: '#D8823A', // the one restrained UI accent — used sparingly
   emberSoft: 'rgba(216, 130, 58, 0.35)',
   emberGlow: 'rgba(216, 130, 58, 0.16)',
+  // The accretion gradient — the star of the palette, reserved for the disk.
+  accretionDeep: '#B8501A',
+  accretionMid: '#E8912F',
+  accretionHot: '#FFF2DC',
+  lensing: '#6E4A9E', // whisper of chromatic fringe, barely there
 } as const;
 
 export const fonts = {

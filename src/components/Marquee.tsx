@@ -14,7 +14,7 @@ export function Marquee({ text }: MarqueeProps) {
   );
 
   return (
-    <div className="overflow-hidden border-y border-line bg-void py-7" aria-hidden="true">
+    <div className="overflow-hidden border-y border-line py-7" aria-hidden="true">
       {reducedMotion ? (
         <div className="flex justify-center">{item('static')}</div>
       ) : (

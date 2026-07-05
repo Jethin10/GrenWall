@@ -4,7 +4,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-line bg-void px-6 py-10">
+    <footer className="relative border-t border-line px-6 py-10">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center md:flex-row md:justify-between md:text-left">
         <div className="flex items-center gap-3">
           <Monogram />

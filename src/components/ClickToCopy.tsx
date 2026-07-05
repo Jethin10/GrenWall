@@ -43,6 +43,10 @@ export function ClickToCopy({ value, className = '' }: ClickToCopyProps) {
       onClick={handleClick}
       data-cursor="copy"
       className={`group inline-flex items-center gap-2 font-mono text-sm text-muted transition-colors hover:text-ember ${className}`}
+      // Not a <p> and not `.label-mono`, so it gets none of the global
+      // text-shadow rules that keep type readable over the black hole —
+      // added directly here since the WhatsApp number must always be legible.
+      style={{ textShadow: '0 1px 12px rgba(5, 5, 6, 0.9)' }}
     >
       {copied ? <Check className="h-3.5 w-3.5 text-ember" aria-hidden="true" /> : <Copy className="h-3.5 w-3.5" aria-hidden="true" />}
       <span>{value}</span>

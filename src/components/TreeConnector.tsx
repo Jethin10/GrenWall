@@ -3,7 +3,7 @@ import { gsap } from '../lib/gsap';
 import { useReducedMotion } from '../lib/useReducedMotion';
 
 const EMBER = '#D8823A';
-const LINE = '#242428';
+const LINE = '#202024';
 
 const PATHS = ['M60 70 C 60 50, 30 45, 22 20', 'M60 70 C 60 50, 60 45, 60 15', 'M60 70 C 60 50, 90 45, 98 20'];
 
@@ -63,7 +63,7 @@ export function TreeConnector() {
   }, [reducedMotion]);
 
   return (
-    <div className="flex justify-center bg-void py-8" aria-hidden="true">
+    <div className="flex justify-center py-8" aria-hidden="true">
       <svg viewBox="0 0 120 80" className="h-16 w-32">
         <circle cx="60" cy="70" r="3" fill={LINE} />
         {PATHS.map((d, i) => (

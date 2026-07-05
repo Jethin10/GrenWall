@@ -33,7 +33,7 @@ export function CropMarkDivider() {
   }, [reducedMotion]);
 
   return (
-    <div className="bg-void py-6" aria-hidden="true">
+    <div className="py-6" aria-hidden="true">
       <div className="relative mx-auto max-w-6xl px-6">
         <div ref={lineRef} className="h-px w-full origin-center bg-line" />
         <div className="absolute left-6 top-1/2 h-3 w-px -translate-y-1/2 bg-line" />

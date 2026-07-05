@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { gsap } from '../lib/gsap';
 import { useReducedMotion } from '../lib/useReducedMotion';
-import { useShowCrystal } from '../lib/useShowCrystal';
+import { useShowBlackHole } from '../lib/useShowBlackHole';
 import { MagneticButton } from './MagneticButton';
 import { ClickToCopy } from './ClickToCopy';
 import { CropFrame } from './CropFrame';
@@ -24,11 +24,12 @@ export function Hero({ introDone }: HeroProps) {
   const cueRef = useRef<HTMLAnchorElement>(null);
 
   const reducedMotion = useReducedMotion();
-  const showCrystal = useShowCrystal();
+  const showBlackHole = useShowBlackHole();
 
-  // Entrance choreography — gated on the preloader finishing. The crystal
-  // itself already materialized during the preloader (see Preloader.tsx);
-  // it lives outside this section now, as the page-level TravelingCrystal.
+  // Entrance choreography — gated on the intro finishing. The black hole
+  // was already running beneath the intro (see Preloader.tsx) and is the
+  // very same instance revealed through it; it lives outside this section,
+  // as the page-level BlackHoleField.
   useEffect(() => {
     if (!introDone) return;
 
@@ -43,7 +44,10 @@ export function Hero({ introDone }: HeroProps) {
     gsap.set([kickerRef.current, taglineRef.current, ctaRef.current, cueRef.current], { opacity: 0, y: 16 });
 
     const tl = gsap.timeline({ defaults: { ease: 'heavy' } });
-    tl.to(kickerRef.current, { opacity: 1, y: 0, duration: 0.6 })
+    // Camera settle: we emerge out of the intro's horizon slightly "inside"
+    // the hero, and the frame eases back to rest.
+    tl.fromTo(contentRef.current, { scale: 1.06 }, { scale: 1, duration: 1.2 }, 0)
+      .to(kickerRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.1)
       .to(taglineRef.current, { opacity: 1, y: 0, duration: 0.7 }, '-=0.3')
       .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.45')
       .to(cueRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.3');
@@ -107,30 +111,51 @@ export function Hero({ introDone }: HeroProps) {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-void"
+      className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden"
     >
+      {/* Cinematic atmosphere: a faint warm pool behind the black hole, and a
+          scrim that dims *toward the centre* — where the kicker, tagline, and
+          CTA sit directly over the disk — so text always reads clearly no
+          matter how bright the disk gets, rather than only darkening the
+          edges and leaving the brightest, most-overlapped area untouched. */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 55% 42% at 50% 42%, rgba(216,130,58,0.07), transparent 70%), radial-gradient(ellipse 85% 82% at 50% 50%, rgba(5,5,6,0.5), rgba(5,5,6,0.2) 58%, transparent 85%)',
+        }}
+        aria-hidden="true"
+      />
+
       <div ref={frameRef}>
         <CropFrame />
       </div>
 
       <div ref={contentRef} className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-6 text-center">
-        <div ref={kickerRef} className="label-mono">
+        {/* Hidden from first paint via `opacity-0` (not just the JS effect
+            below): the intro's reveal mask now opens gradually, much earlier
+            than before, onto whatever is already composited behind the
+            preloader — if these started fully opaque (their gsap.set(0) only
+            ran once `introDone` flipped true), the raw, unstyled hero text
+            would show through the growing mask hole during the intro itself,
+            undercutting the "one continuous object" handoff entirely. */}
+        <div ref={kickerRef} className="label-mono opacity-0">
           Grenwall // Automation Studio
         </div>
 
         <div
-          id="hero-crystal-anchor"
-          className="mt-4 flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72 md:h-80 md:w-80"
+          id="hero-core-anchor"
+          className="mt-2 flex h-64 w-64 items-center justify-center sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
           aria-hidden="true"
         >
-          {!showCrystal && <Monogram className="h-1/2 w-1/2 text-bone" />}
+          {!showBlackHole && <Monogram className="h-1/2 w-1/2 text-bone" />}
         </div>
 
-        <p ref={taglineRef} className="-mt-2 max-w-md text-balance font-body text-base text-muted md:text-lg">
+        <p ref={taglineRef} className="-mt-3 max-w-lg text-balance font-body text-lg text-bone/80 opacity-0 md:text-xl">
           The work still gets done. You just stop doing it.
         </p>
 
-        <div ref={ctaRef} className="mt-10 flex flex-col items-center gap-5">
+        <div ref={ctaRef} className="mt-10 flex flex-col items-center gap-5 opacity-0">
           <MagneticButton
             href={links.whatsapp}
             className="inline-flex items-center gap-2 rounded-full border-2 border-bone px-8 py-4 font-mono text-sm tracking-wide text-bone"
@@ -149,14 +174,17 @@ export function Hero({ introDone }: HeroProps) {
         ref={cueRef}
         href="#what-we-build"
         data-cursor-hover
-        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-muted transition-colors hover:text-ember"
+        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-muted opacity-0 transition-colors hover:text-ember"
       >
         <span className="label-mono">Scroll</span>
         <ChevronDown className="h-4 w-4 motion-safe:animate-bounce" aria-hidden="true" />
         <span className="sr-only">Scroll to learn what we build</span>
       </a>
 
-      <div className="label-mono absolute bottom-8 right-8 z-10 hidden sm:block">GW—01</div>
+      <div className="absolute bottom-8 right-8 z-10 hidden flex-col items-end gap-1 sm:flex">
+        <span className="label-mono">GW—01</span>
+        <span className="label-mono">©GRENWALL 2026</span>
+      </div>
     </section>
   );
 }

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { RevealText } from './RevealText';
 import { AgentMark } from './AgentMark';
-import { ClipReveal } from './ClipReveal';
+import { GravityReveal } from './GravityReveal';
 // StatBand is intentionally unused for now — see the comment near the
 // bottom of this file and StatBand.tsx for how to wire in real numbers later.
 // import { StatBand } from './StatBand';
@@ -10,8 +10,15 @@ const VALUE_STATEMENTS = ['Custom-built. Never templated.', 'IP stays with Grenw
 
 export function WhyGrenwall() {
   return (
-    <section id="why-grenwall" className="relative bg-void px-6 py-24 md:py-32">
-      <ClipReveal className="mx-auto max-w-6xl">
+    <section
+      id="why-grenwall"
+      className="relative px-6 py-24 md:py-32"
+      style={{
+        background:
+          'radial-gradient(ellipse 92% 90% at 50% 50%, rgba(5,5,6,0.92), rgba(5,5,6,0.6) 56%, rgba(5,5,6,0.15) 84%, transparent)',
+      }}
+    >
+      <GravityReveal className="mx-auto max-w-6xl">
         <div className="mb-5 flex items-center">
           <AgentMark />
           <div className="label-mono">04 — Why Grenwall</div>
@@ -49,7 +56,7 @@ export function WhyGrenwall() {
             { label: 'Client retention', value: 98, suffix: '%' },
           ]} />
         */}
-      </ClipReveal>
+      </GravityReveal>
     </section>
   );
 }

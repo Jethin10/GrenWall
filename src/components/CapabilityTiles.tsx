@@ -7,9 +7,9 @@ import { ClipReveal } from './ClipReveal';
 import { useReducedMotion } from '../lib/useReducedMotion';
 import { useIsMobile } from '../lib/useIsMobile';
 
-const BONE = '#F2EFE7';
+const BONE = '#F3EFE6';
 const EMBER = '#D8823A';
-const VOID = '#08080A';
+const VOID = '#050506';
 
 function pulseNode(el: SVGCircleElement | null) {
   if (!el) return;
@@ -61,12 +61,13 @@ function RowTile({ title, caption, className = '', children, onPlayChange }: Omi
       onMouseLeave={() => onPlayChange(false)}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className={`group flex h-full shrink-0 flex-col justify-between rounded-2xl border border-line bg-surface p-6 shadow-none transition-shadow duration-300 hover:shadow-[0_20px_45px_-22px_rgba(216,130,58,0.25)] ${className}`}
+      className={`group flex shrink-0 flex-col justify-between rounded-2xl border border-line bg-surface p-8 shadow-none transition-shadow duration-300 hover:shadow-[0_20px_45px_-22px_rgba(216,130,58,0.25)] ${className}`}
     >
-      <div className="flex flex-1 items-center justify-center">{children}</div>
+      {/* Scenes are shared with the mobile grid; the reel just shows them larger. */}
+      <div className="flex flex-1 scale-[1.45] items-center justify-center">{children}</div>
       <div className="mt-5">
-        <h3 className="font-display text-lg text-bone">{title}</h3>
-        <p className="mt-1 text-xs leading-relaxed text-muted">{caption}</p>
+        <h3 className="font-display text-xl text-bone">{title}</h3>
+        <p className="mt-1.5 text-sm leading-relaxed text-muted">{caption}</p>
       </div>
     </motion.div>
   );
@@ -795,8 +796,12 @@ export function CapabilityTiles() {
   }, [horizontal]);
 
   return (
-    <section ref={sectionRef} id="capability" className="relative overflow-hidden bg-void">
-      <div className="px-6 pt-24 md:pt-32">
+    <section
+      ref={sectionRef}
+      id="capability"
+      className={`relative overflow-hidden ${horizontal ? 'flex min-h-[100svh] flex-col justify-center' : ''}`}
+    >
+      <div className={`px-6 ${horizontal ? 'pt-10' : 'pt-24 md:pt-32'}`}>
         <div className="mx-auto max-w-6xl">
           <div className="mb-5 flex items-center">
             <AgentMark />
@@ -811,14 +816,14 @@ export function CapabilityTiles() {
       </div>
 
       {horizontal ? (
-        <div className="mt-16 pb-24 md:pb-32">
+        <div className="mt-14 pb-10">
           <div ref={trackRef} className="flex gap-5 px-6 will-change-transform" style={{ width: 'max-content' }}>
             {TILES.map((tile) => (
               <RowTileWrapper
                 key={tile.title}
                 title={tile.title}
                 caption={tile.caption}
-                className={tile.wide ? 'h-[380px] w-[520px]' : 'h-[380px] w-[320px]'}
+                className={tile.wide ? 'h-[450px] w-[640px]' : 'h-[450px] w-[380px]'}
               >
                 {(playing) => <tile.Scene playing={playing} />}
               </RowTileWrapper>

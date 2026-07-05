@@ -13,6 +13,7 @@ export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
+  const trailRefs = useRef<(HTMLDivElement | null)[]>([]);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -29,11 +30,21 @@ export function CustomCursor() {
     const setRing = gsap.quickTo(ring, 'x', { duration: 0.35, ease: 'power3.out' });
     const setRingY = gsap.quickTo(ring, 'y', { duration: 0.35, ease: 'power3.out' });
 
+    // Faint trail: each dot chases the cursor a little slower than the last.
+    const trailSetters = trailRefs.current.filter(Boolean).map((el, i) => ({
+      x: gsap.quickTo(el, 'x', { duration: 0.22 + i * 0.14, ease: 'power3.out' }),
+      y: gsap.quickTo(el, 'y', { duration: 0.22 + i * 0.14, ease: 'power3.out' }),
+    }));
+
     const onMove = (e: MouseEvent) => {
       setDot(e.clientX);
       setDotY(e.clientY);
       setRing(e.clientX);
       setRingY(e.clientY);
+      trailSetters.forEach((setter) => {
+        setter.x(e.clientX);
+        setter.y(e.clientY);
+      });
     };
 
     const showLabel = (text: string) => {
@@ -90,6 +101,17 @@ export function CustomCursor() {
 
   return (
     <>
+      {[0.22, 0.13, 0.07].map((opacity, i) => (
+        <div
+          key={opacity}
+          ref={(el) => {
+            trailRefs.current[i] = el;
+          }}
+          className="pointer-events-none fixed left-0 top-0 z-[58] h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-bone"
+          style={{ opacity }}
+          aria-hidden="true"
+        />
+      ))}
       <div ref={dotRef} className="cursor-dot" aria-hidden="true" />
       <div ref={ringRef} className="cursor-ring" aria-hidden="true">
         <span ref={labelRef} className="cursor-ring-label-text" />

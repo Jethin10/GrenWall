@@ -32,7 +32,7 @@ const OFFERS: Offer[] = [
   },
 ];
 
-const MUTED = '#5F5F5C';
+const MUTED = '#5C5C58';
 const EMBER = '#D8823A';
 
 /**
@@ -44,6 +44,7 @@ export function WhatWeBuild() {
   const sectionRef = useRef<HTMLElement>(null);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const numeralRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const reducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const pinned = !reducedMotion && !isMobile;
@@ -55,6 +56,7 @@ export function WhatWeBuild() {
 
     const ctx = gsap.context(() => {
       gsap.set(panelRefs.current.slice(1), { autoAlpha: 0, y: 24 });
+      gsap.set(numeralRefs.current.slice(1), { autoAlpha: 0, y: 60 });
       gsap.set(dotRefs.current.slice(1), { color: MUTED });
       if (dotRefs.current[0]) gsap.set(dotRefs.current[0], { color: EMBER });
 
@@ -68,22 +70,40 @@ export function WhatWeBuild() {
         },
       });
 
-      tl.to(panelRefs.current[0], { autoAlpha: 0, y: -24, duration: 0.3 }, 1)
-        .to(panelRefs.current[1], { autoAlpha: 1, y: 0, duration: 0.3 }, 1)
-        .to(dotRefs.current[0], { color: MUTED, duration: 0.3 }, 1)
-        .to(dotRefs.current[1], { color: EMBER, duration: 0.3 }, 1)
-        .to(panelRefs.current[1], { autoAlpha: 0, y: -24, duration: 0.3 }, 2)
-        .to(panelRefs.current[2], { autoAlpha: 1, y: 0, duration: 0.3 }, 2)
-        .to(dotRefs.current[1], { color: MUTED, duration: 0.3 }, 2)
-        .to(dotRefs.current[2], { color: EMBER, duration: 0.3 }, 2);
+      const swap = (from: number, to: number, at: number) => {
+        tl.to(panelRefs.current[from], { autoAlpha: 0, y: -24, duration: 0.3 }, at)
+          .to(panelRefs.current[to], { autoAlpha: 1, y: 0, duration: 0.3 }, at)
+          .to(numeralRefs.current[from], { autoAlpha: 0, y: -60, duration: 0.3 }, at)
+          .to(numeralRefs.current[to], { autoAlpha: 1, y: 0, duration: 0.3 }, at)
+          .to(dotRefs.current[from], { color: MUTED, duration: 0.3 }, at)
+          .to(dotRefs.current[to], { color: EMBER, duration: 0.3 }, at);
+      };
+      swap(0, 1, 1);
+      swap(1, 2, 2);
     }, section);
 
     return () => ctx.revert();
   }, [pinned]);
 
   return (
-    <section ref={sectionRef} id="what-we-build" className="relative bg-void px-6 py-24 md:py-32">
-      <div className="mx-auto flex h-full max-w-6xl flex-col justify-center">
+    <section
+      ref={sectionRef}
+      id="what-we-build"
+      className={`relative px-6 py-24 md:py-32 ${pinned ? 'flex min-h-[100svh] flex-col justify-center overflow-hidden' : ''}`}
+    >
+      {/* Mostly a safety net: the fall curve keeps the disk dim through most
+          of the page, but a fast scroll here can still spike its brightness
+          momentarily, so a soft scrim keeps the (left-aligned) copy readable. */}
+      {pinned && (
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse 78% 75% at 38% 52%, rgba(5,5,6,0.55), rgba(5,5,6,0.2) 55%, transparent 85%)',
+          }}
+          aria-hidden="true"
+        />
+      )}
+      <div className="relative mx-auto flex h-full w-full max-w-6xl flex-col justify-center">
         <div className="mb-5 flex items-center">
           <AgentMark />
           <div className="label-mono">01 — What we build</div>
@@ -95,8 +115,22 @@ export function WhatWeBuild() {
         />
 
         {pinned ? (
-          <div className="relative mt-16 min-h-[22rem]">
-            <div className="mb-8 flex items-center gap-4">
+          <div className="relative mt-14 min-h-[24rem]">
+            {/* Giant ghost numeral — the section's own backdrop, one per offer */}
+            {OFFERS.map((offer, i) => (
+              <span
+                key={`numeral-${offer.title}`}
+                ref={(el) => {
+                  numeralRefs.current[i] = el;
+                }}
+                className="pointer-events-none absolute -top-10 right-0 z-0 select-none font-display text-[16rem] leading-none text-line md:text-[20rem]"
+                aria-hidden="true"
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+            ))}
+
+            <div className="relative z-10 mb-8 flex items-center gap-4">
               {OFFERS.map((offer, i) => (
                 <span
                   key={offer.title}
@@ -115,11 +149,11 @@ export function WhatWeBuild() {
                 ref={(el) => {
                   panelRefs.current[i] = el;
                 }}
-                className="absolute inset-x-0 top-8 max-w-2xl"
+                className="absolute inset-x-0 top-8 z-10 max-w-3xl"
               >
-                <offer.icon className="h-10 w-10 text-ember" strokeWidth={1.5} aria-hidden="true" />
-                <h3 className="mt-6 font-display text-3xl text-bone md:text-5xl">{offer.title}</h3>
-                <p className="mt-4 max-w-lg text-base leading-relaxed text-muted md:text-lg">{offer.copy}</p>
+                <offer.icon className="h-12 w-12 text-ember" strokeWidth={1.5} aria-hidden="true" />
+                <h3 className="mt-6 font-display text-4xl text-bone md:text-7xl">{offer.title}</h3>
+                <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted md:text-xl">{offer.copy}</p>
               </div>
             ))}
           </div>

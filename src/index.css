@@ -16,7 +16,7 @@
 }
 
 html {
-  background: #08080a;
+  background: #050506;
   scroll-behavior: auto;
 }
 
@@ -26,8 +26,8 @@ html.has-lenis {
 
 body {
   margin: 0;
-  background: #08080a;
-  color: #f2efe7;
+  background: #050506;
+  color: #F3EFE6;
   font-family: 'Inter Variable', 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -58,9 +58,24 @@ a {
   color: inherit;
 }
 
+/* The black hole now lives behind all content. A soft dark halo on text keeps
+   it legible where the bright accretion disk passes behind it, and is
+   invisible over the deep-black background elsewhere. */
+.font-display {
+  text-shadow: 0 2px 26px rgba(5, 5, 6, 0.72);
+}
+
+.label-mono {
+  text-shadow: 0 1px 12px rgba(5, 5, 6, 0.9);
+}
+
+main p {
+  text-shadow: 0 1px 14px rgba(5, 5, 6, 0.78);
+}
+
 ::selection {
   background: rgba(216, 130, 58, 0.3);
-  color: #f2efe7;
+  color: #F3EFE6;
 }
 
 /* Focus states — visible, ember, accessible */
@@ -111,7 +126,7 @@ button:focus-visible,
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(242, 239, 231, 0.35);
+  border: 1px solid rgba(243, 239, 230, 0.35);
   transform: translate(-50%, -50%);
   transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
     padding 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, background-color 0.25s ease;
@@ -138,7 +153,7 @@ button:focus-visible,
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #08080a;
+  color: #050506;
   white-space: nowrap;
 }
 

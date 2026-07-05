@@ -4,16 +4,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        void: '#08080A',
-        surface: '#121214',
-        bone: '#F2EFE7',
-        muted: '#5F5F5C',
-        line: '#242428',
+        void: '#050506',
+        surface: '#0E0E10',
+        bone: '#F3EFE6',
+        muted: '#5C5C58',
+        line: '#202024',
         ember: {
           DEFAULT: '#D8823A',
           soft: 'rgba(216, 130, 58, 0.35)',
           glow: 'rgba(216, 130, 58, 0.16)',
         },
+        accretion: {
+          deep: '#B8501A',
+          mid: '#E8912F',
+          hot: '#FFF2DC',
+        },
+        lensing: '#6E4A9E',
       },
       fontFamily: {
         display: ['"Archivo Variable"', '"Archivo"', 'sans-serif'],
