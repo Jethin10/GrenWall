@@ -1,29 +1,27 @@
 /**
- * Grenwall Systems design tokens — deep space-black with a warm accretion
- * glow, built around the black-hole centerpiece (steven.com intro energy,
- * podium.global world). Single source of truth for values also mirrored in
+ * Grenwall Systems design tokens — full monochrome reset. Warm off-white on
+ * near-black, zero accent color: premium comes from type, spacing, and one
+ * heavy ease. Single source of truth for values also mirrored in
  * `tailwind.config.js` (Tailwind can't import .ts at config time, so keep
  * the two in sync by hand).
  */
 
 export const colors = {
-  void: '#050506', // near-true black — deep space, never pure #000
-  surface: '#0E0E10', // raised panels / tiles
-  bone: '#F3EFE6', // warm bone white text, never pure #FFF
-  muted: '#5C5C58', // secondary text, labels
-  line: '#202024', // hairlines, crop marks
-  ember: '#D8823A', // the one restrained UI accent — used sparingly
-  emberSoft: 'rgba(216, 130, 58, 0.35)',
-  emberGlow: 'rgba(216, 130, 58, 0.16)',
-  // The accretion gradient — the star of the palette, reserved for the disk.
-  accretionDeep: '#B8501A',
-  accretionMid: '#E8912F',
-  accretionHot: '#FFF2DC',
-  lensing: '#6E4A9E', // whisper of chromatic fringe, barely there
+  ink: '#080807', // near-black page ground — never pure #000
+  bone: '#E8E8E3', // warm off-white — text on dark, page bg in light theme
+  paper: '#E8E8E3', // light-theme section background (alias of bone)
+  gray1: '#938F8A', // secondary text on dark
+  gray2: '#524D47', // tertiary text / de-emphasized words
+  gray3: '#393632', // faint text, hairline-adjacent
+  card: '#181715', // raised surfaces on dark
+  cardLight: '#DDDDD5', // raised surfaces on light
+  inkOnLight: '#080807',
+  hairline: 'rgba(232, 232, 227, 0.14)', // rules on dark
+  hairlineLight: 'rgba(8, 8, 7, 0.14)', // rules on light
 } as const;
 
 export const fonts = {
-  display: "'Archivo Variable', 'Archivo', sans-serif",
+  display: "'Inter Variable', 'Inter', sans-serif",
   body: "'Inter Variable', 'Inter', sans-serif",
   mono: "'JetBrains Mono', monospace",
 } as const;
@@ -37,8 +35,7 @@ export const easing = {
 
 export const motion = {
   lenisLerp: 0.09,
-  introDurationMs: 2200,
-  cardTiltDeg: 10,
+  introDurationMs: 1800,
 } as const;
 
 export const links = {
@@ -48,6 +45,7 @@ export const links = {
 } as const;
 
 export const copy = {
-  brand: 'GRENWALL SYSTEMS',
-  monogram: 'G',
+  brand: 'GRENWALL',
+  brandFull: 'GRENWALL SYSTEMS',
+  motto: 'If the work repeats, it can be automated.',
 } as const;

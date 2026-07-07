@@ -8,17 +8,21 @@ interface MarqueeProps {
 export function Marquee({ text }: MarqueeProps) {
   const reducedMotion = useReducedMotion();
   const item = (key: string) => (
-    <span key={key} className="shrink-0 pr-10 font-display text-3xl uppercase tracking-tight text-bone/40 md:text-4xl">
+    <span
+      key={key}
+      className="text-faint shrink-0 pr-12 text-3xl tracking-tight md:text-4xl"
+      style={{ fontVariationSettings: "'opsz' 32, 'wght' 500", letterSpacing: '-0.03em' }}
+    >
       {text}
     </span>
   );
 
   return (
-    <div className="overflow-hidden border-y border-line py-7" aria-hidden="true">
+    <div className="rule overflow-hidden border-y py-7" aria-hidden="true">
       {reducedMotion ? (
         <div className="flex justify-center">{item('static')}</div>
       ) : (
-        <div className="flex w-max animate-marquee">
+        <div className="animate-marquee flex w-max">
           {item('a')}
           {item('b')}
         </div>

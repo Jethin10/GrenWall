@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "WebFetch(domain:www.blackholeexperience.com)",
+      "Read(//Users/dev/**)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)"
     ]
   }
 }

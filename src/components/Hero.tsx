@@ -1,77 +1,67 @@
 import { useEffect, useRef } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import { gsap } from '../lib/gsap';
 import { useReducedMotion } from '../lib/useReducedMotion';
-import { useShowBlackHole } from '../lib/useShowBlackHole';
-import { MagneticButton } from './MagneticButton';
-import { ClickToCopy } from './ClickToCopy';
-import { CropFrame } from './CropFrame';
-import { LiveClock } from './LiveClock';
-import { Monogram } from './Monogram';
 import { links } from '../tokens';
 
 interface HeroProps {
   introDone: boolean;
 }
 
+/**
+ * Full-viewport opening statement. The motto is the headline — two masked
+ * lines rising after the preloader curtain lifts, a quiet subline, and a
+ * meta row pinned to the bottom edge. No imagery: the emptiness is the
+ * design.
+ */
 export function Hero({ introDone }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<HTMLDivElement>(null);
-  const kickerRef = useRef<HTMLDivElement>(null);
-  const taglineRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-  const cueRef = useRef<HTMLAnchorElement>(null);
-
+  const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const restRefs = useRef<(HTMLElement | null)[]>([]);
   const reducedMotion = useReducedMotion();
-  const showBlackHole = useShowBlackHole();
 
-  // Entrance choreography — gated on the intro finishing. The black hole
-  // was already running beneath the intro (see Preloader.tsx) and is the
-  // very same instance revealed through it; it lives outside this section,
-  // as the page-level BlackHoleField.
   useEffect(() => {
-    if (!introDone) return;
+    const lines = lineRefs.current.filter(Boolean) as HTMLElement[];
+    const rest = restRefs.current.filter(Boolean) as HTMLElement[];
 
     if (reducedMotion) {
-      gsap.set([kickerRef.current, taglineRef.current, ctaRef.current, cueRef.current], {
-        opacity: 1,
-        y: 0,
-      });
+      gsap.set([...lines, ...rest], { yPercent: 0, y: 0, opacity: 1 });
       return;
     }
 
-    gsap.set([kickerRef.current, taglineRef.current, ctaRef.current, cueRef.current], { opacity: 0, y: 16 });
+    if (!introDone) {
+      gsap.set(lines, { yPercent: 115 });
+      gsap.set(rest, { opacity: 0, y: 14 });
+      return;
+    }
 
-    const tl = gsap.timeline({ defaults: { ease: 'heavy' } });
-    // Camera settle: we emerge out of the intro's horizon slightly "inside"
-    // the hero, and the frame eases back to rest.
-    tl.fromTo(contentRef.current, { scale: 1.06 }, { scale: 1, duration: 1.2 }, 0)
-      .to(kickerRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.1)
-      .to(taglineRef.current, { opacity: 1, y: 0, duration: 0.7 }, '-=0.3')
-      .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.45')
-      .to(cueRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.3');
+    const tl = gsap.timeline();
+    tl.to(lines, { yPercent: 0, duration: 1.2, stagger: 0.1 }, 0).to(
+      rest,
+      { opacity: 1, y: 0, duration: 1, stagger: 0.08 },
+      0.55,
+    );
 
     return () => {
       tl.kill();
     };
   }, [introDone, reducedMotion]);
 
-  // Parallax depth: hero content drifts and fades as the page scrolls past it.
+  // Slow parallax out as you leave the hero — content drifts up and dims.
   useEffect(() => {
     if (reducedMotion) return;
     const section = sectionRef.current;
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      gsap.to(contentRef.current, {
-        yPercent: -18,
-        opacity: 0.2,
+      gsap.to('[data-hero-inner]', {
+        yPercent: -10,
+        opacity: 0.15,
         ease: 'none',
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: 'bottom top',
+          end: 'bottom 25%',
           scrub: true,
         },
       });
@@ -80,110 +70,73 @@ export function Hero({ introDone }: HeroProps) {
     return () => ctx.revert();
   }, [reducedMotion]);
 
-  // Mouse parallax: the crop-frame drifts opposite the cursor (background
-  // layer), the content drifts slightly with it (foreground layer) — a
-  // subtle sense of depth so the composition breathes as the cursor moves.
-  useEffect(() => {
-    if (reducedMotion) return;
-    const section = sectionRef.current;
-    if (!section || window.matchMedia('(pointer: coarse)').matches) return;
-
-    const setFrameX = gsap.quickTo(frameRef.current, 'x', { duration: 0.8, ease: 'power3.out' });
-    const setFrameY = gsap.quickTo(frameRef.current, 'y', { duration: 0.8, ease: 'power3.out' });
-    const setContentX = gsap.quickTo(contentRef.current, 'x', { duration: 0.8, ease: 'power3.out' });
-    const setContentY = gsap.quickTo(contentRef.current, 'y', { duration: 0.8, ease: 'power3.out' });
-
-    const onMove = (e: MouseEvent) => {
-      const rect = section.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width - 0.5;
-      const py = (e.clientY - rect.top) / rect.height - 0.5;
-      setFrameX(-px * 18);
-      setFrameY(-py * 18);
-      setContentX(px * 8);
-      setContentY(py * 8);
-    };
-
-    section.addEventListener('mousemove', onMove);
-    return () => section.removeEventListener('mousemove', onMove);
-  }, [reducedMotion]);
+  const setLineRef = (i: number) => (el: HTMLSpanElement | null) => {
+    lineRefs.current[i] = el;
+  };
+  const setRestRef = (i: number) => (el: HTMLElement | null) => {
+    restRefs.current[i] = el;
+  };
 
   return (
     <section
       ref={sectionRef}
       id="hero"
-      className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden"
+      className="relative flex min-h-[100svh] w-full flex-col justify-between overflow-hidden"
     >
-      {/* Cinematic atmosphere: a faint warm pool behind the black hole, and a
-          scrim that dims *toward the centre* — where the kicker, tagline, and
-          CTA sit directly over the disk — so text always reads clearly no
-          matter how bright the disk gets, rather than only darkening the
-          edges and leaving the brightest, most-overlapped area untouched. */}
       <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 55% 42% at 50% 42%, rgba(216,130,58,0.07), transparent 70%), radial-gradient(ellipse 85% 82% at 50% 50%, rgba(5,5,6,0.5), rgba(5,5,6,0.2) 58%, transparent 85%)',
-        }}
-        aria-hidden="true"
-      />
-
-      <div ref={frameRef}>
-        <CropFrame />
-      </div>
-
-      <div ref={contentRef} className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-6 text-center">
-        {/* Hidden from first paint via `opacity-0` (not just the JS effect
-            below): the intro's reveal mask now opens gradually, much earlier
-            than before, onto whatever is already composited behind the
-            preloader — if these started fully opaque (their gsap.set(0) only
-            ran once `introDone` flipped true), the raw, unstyled hero text
-            would show through the growing mask hole during the intro itself,
-            undercutting the "one continuous object" handoff entirely. */}
-        <div ref={kickerRef} className="label-mono opacity-0">
-          Grenwall // Automation Studio
-        </div>
-
-        <div
-          id="hero-core-anchor"
-          className="mt-2 flex h-64 w-64 items-center justify-center sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
-          aria-hidden="true"
-        >
-          {!showBlackHole && <Monogram className="h-1/2 w-1/2 text-bone" />}
-        </div>
-
-        <p ref={taglineRef} className="-mt-3 max-w-lg text-balance font-body text-lg text-bone/80 opacity-0 md:text-xl">
-          The work still gets done. You just stop doing it.
-        </p>
-
-        <div ref={ctaRef} className="mt-10 flex flex-col items-center gap-5 opacity-0">
-          <MagneticButton
-            href={links.whatsapp}
-            className="inline-flex items-center gap-2 rounded-full border-2 border-bone px-8 py-4 font-mono text-sm tracking-wide text-bone"
-          >
-            Book a call
-          </MagneticButton>
-          <ClickToCopy value={links.whatsappPhoneDisplay} />
-        </div>
-      </div>
-
-      <div className="absolute bottom-8 left-8 z-10 hidden sm:block">
-        <LiveClock />
-      </div>
-
-      <a
-        ref={cueRef}
-        href="#what-we-build"
-        data-cursor-hover
-        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-muted opacity-0 transition-colors hover:text-ember"
+        data-hero-inner
+        className="flex min-h-[100svh] w-full flex-col justify-between px-5 pb-8 pt-24 md:px-10 md:pt-28"
       >
-        <span className="label-mono">Scroll</span>
-        <ChevronDown className="h-4 w-4 motion-safe:animate-bounce" aria-hidden="true" />
-        <span className="sr-only">Scroll to learn what we build</span>
-      </a>
+        {/* Eyebrow row */}
+        <div ref={setRestRef(0)} className="flex items-center justify-between" style={{ opacity: 0 }}>
+          <span className="label-mono">AI Automation Studio</span>
+          <span className="label-mono hidden md:inline">Agents &amp; Workflows</span>
+        </div>
 
-      <div className="absolute bottom-8 right-8 z-10 hidden flex-col items-end gap-1 sm:flex">
-        <span className="label-mono">GW—01</span>
-        <span className="label-mono">©GRENWALL 2026</span>
+        {/* The statement */}
+        <div className="py-14">
+          <h1 className="text-display text-[color:var(--fg)]">
+            <span className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
+              <span ref={setLineRef(0)} className="block">
+                If the work repeats,
+              </span>
+            </span>
+            <span className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
+              <span ref={setLineRef(1)} className="text-faint block">
+                it can be automated.
+              </span>
+            </span>
+          </h1>
+
+          <p ref={setRestRef(1)} className="text-body text-muted mt-10 max-w-md" style={{ opacity: 0 }}>
+            Grenwall designs and builds AI agents and automations that take the
+            repetitive work off your team&rsquo;s hands — for any business, at any
+            scale.
+          </p>
+        </div>
+
+        {/* Bottom meta row */}
+        <div ref={setRestRef(2)} className="rule flex items-end justify-between border-t pt-6" style={{ opacity: 0 }}>
+          <span className="label-mono">Working worldwide</span>
+          <a
+            href="#problem"
+            data-cursor-hover
+            className="label-mono inline-flex items-center gap-2"
+            aria-label="Scroll to next section"
+          >
+            Scroll
+            <ArrowDown className="h-3 w-3" aria-hidden="true" />
+          </a>
+          <a
+            href={links.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor-hover
+            className="label-mono link-line hidden md:inline"
+          >
+            {links.whatsappPhoneDisplay}
+          </a>
+        </div>
       </div>
     </section>
   );

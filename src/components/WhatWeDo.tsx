@@ -1,64 +1,115 @@
-import { RevealText } from './RevealText';
-import { AgentMark } from './AgentMark';
-import { GravityReveal } from './GravityReveal';
-import { Marquee } from './Marquee';
+import { useEffect, useRef } from 'react';
+import { ArrowUpRight } from 'lucide-react';
+import { gsap } from '../lib/gsap';
+import { useReducedMotion } from '../lib/useReducedMotion';
+import { SplitLines } from './SplitLines';
+import { links } from '../tokens';
 
-const LINES = [
-  'Invoicing',
-  'Follow-ups',
-  'Reporting',
-  'Scheduling',
-  'Onboarding',
-  'Reconciliation',
-  'Lead routing',
-  'Data entry',
+interface Service {
+  index: string;
+  title: string;
+  detail: string;
+}
+
+const SERVICES: Service[] = [
+  {
+    index: '01',
+    title: 'Custom AI agents',
+    detail: 'Autonomous agents that reason, decide and act inside your tools.',
+  },
+  {
+    index: '02',
+    title: 'Workflow automation',
+    detail: 'Multi-step processes wired end to end — no copy-paste, no chasing.',
+  },
+  {
+    index: '03',
+    title: 'System integrations',
+    detail: 'Your CRM, inbox, sheets and stack, finally talking to each other.',
+  },
+  {
+    index: '04',
+    title: 'AI chat & voice',
+    detail: 'Assistants that hold a real conversation with customers, 24/7.',
+  },
+  {
+    index: '05',
+    title: 'Automation audits',
+    detail: 'We map your operations and show you exactly what to automate first.',
+  },
 ];
 
+/**
+ * Services as a ledger: full-width rows, mono indices, hairline dividers.
+ * Rows reveal on scroll; on hover the row brightens and its arrow steps in
+ * from the edge.
+ */
 export function WhatWeDo() {
-  return (
-    <section id="what-we-do" className="relative">
-      {/* A soft scrim dims the black hole behind this text-dense block so the
-          list stays legible; it fades to nothing at the edges, letting the
-          disk glow through between sections. */}
-      <div
-        className="relative px-6 pb-16 pt-24 md:pt-32"
-        style={{
-          background:
-            'radial-gradient(ellipse 96% 92% at 50% 50%, rgba(5,5,6,0.92), rgba(5,5,6,0.6) 54%, rgba(5,5,6,0.15) 82%, transparent)',
-        }}
-      >
-        <div className="mx-auto max-w-6xl">
-          <GravityReveal>
-            <div className="mb-5 flex items-center">
-              <AgentMark />
-              <div className="label-mono">03 — What we automate</div>
-            </div>
-            <RevealText
-              as="h2"
-              lines={['What we automate.']}
-              className="max-w-2xl font-display text-4xl text-bone md:text-5xl"
-            />
-          </GravityReveal>
+  const sectionRef = useRef<HTMLElement>(null);
+  const reducedMotion = useReducedMotion();
 
-          <ul className="mt-16">
-            {LINES.map((line, i) => (
-              <li
-                key={line}
-                className="group border-t border-line transition-all duration-300 hover:pl-3 last:border-b"
-              >
-                <GravityReveal strength={1.15} className="flex items-baseline gap-6 py-5">
-                  <span className="label-mono shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="font-display text-2xl text-bone transition-colors duration-300 group-hover:text-ember sm:text-3xl md:text-4xl">
-                    {line}
-                  </span>
-                </GravityReveal>
-              </li>
-            ))}
-          </ul>
-        </div>
+  useEffect(() => {
+    if (reducedMotion) return;
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>('[data-service-row]').forEach((row) => {
+        gsap.fromTo(
+          row,
+          { opacity: 0, y: 28 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            scrollTrigger: { trigger: row, start: 'top 90%', once: true },
+          },
+        );
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [reducedMotion]);
+
+  return (
+    <section ref={sectionRef} id="services" className="px-5 py-32 md:px-10 md:py-44">
+      <div className="rule mb-6 flex items-center justify-between border-t pt-6">
+        <SplitLines as="span" className="label-mono">
+          Services
+        </SplitLines>
+        <span className="label-mono text-faint">03</span>
       </div>
 
-      <Marquee text="AI AGENTS • WORKFLOW AUTOMATION • BUSINESS INTELLIGENCE •" />
+      <SplitLines as="h2" className="text-h1 max-w-3xl text-[color:var(--fg)]">
+        One studio for the whole automation stack.
+      </SplitLines>
+
+      <div className="mt-16">
+        {SERVICES.map((service) => (
+          <a
+            key={service.index}
+            href={links.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-service-row
+            data-cursor-hover
+            className="rule group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 border-t py-7 transition-colors duration-300 md:grid-cols-[4rem_1fr_1fr_auto] md:py-9"
+          >
+            <span className="label-mono text-faint">{service.index}</span>
+            <h3 className="text-h2 text-muted transition-colors duration-300 group-hover:text-[color:var(--fg)]">
+              {service.title}
+            </h3>
+            <p className="text-body text-faint hidden max-w-sm transition-colors duration-300 group-hover:text-[color:var(--fg-muted)] md:block">
+              {service.detail}
+            </p>
+            <ArrowUpRight
+              className="text-faint h-5 w-5 -translate-x-2 opacity-0 transition-all duration-300 ease-out-cubic group-hover:translate-x-0 group-hover:text-[color:var(--fg)] group-hover:opacity-100"
+              aria-hidden="true"
+            />
+          </a>
+        ))}
+        <div className="rule border-t" />
+      </div>
     </section>
   );
 }

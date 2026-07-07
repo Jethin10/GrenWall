@@ -4,33 +4,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        void: '#050506',
-        surface: '#0E0E10',
-        bone: '#F3EFE6',
-        muted: '#5C5C58',
-        line: '#202024',
-        ember: {
-          DEFAULT: '#D8823A',
-          soft: 'rgba(216, 130, 58, 0.35)',
-          glow: 'rgba(216, 130, 58, 0.16)',
-        },
-        accretion: {
-          deep: '#B8501A',
-          mid: '#E8912F',
-          hot: '#FFF2DC',
-        },
-        lensing: '#6E4A9E',
+        ink: '#080807',
+        bone: '#E8E8E3',
+        paper: '#E8E8E3',
+        'gray-1': '#938F8A',
+        'gray-2': '#524D47',
+        'gray-3': '#393632',
+        card: '#181715',
+        'card-light': '#DDDDD5',
+        hairline: 'rgba(232, 232, 227, 0.14)',
+        'hairline-light': 'rgba(8, 8, 7, 0.14)',
       },
       fontFamily: {
-        display: ['"Archivo Variable"', '"Archivo"', 'sans-serif'],
+        display: ['"Inter Variable"', '"Inter"', 'sans-serif'],
         body: ['"Inter Variable"', '"Inter"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       transitionTimingFunction: {
         'out-cubic': 'cubic-bezier(0.16, 1, 0.3, 1)',
-      },
-      backgroundImage: {
-        'ember-radial': 'radial-gradient(circle, rgba(216,130,58,0.24) 0%, rgba(216,130,58,0) 70%)',
       },
       keyframes: {
         marquee: {
@@ -39,7 +30,7 @@ export default {
         },
       },
       animation: {
-        marquee: 'marquee 26s linear infinite',
+        marquee: 'marquee 30s linear infinite',
       },
     },
   },
