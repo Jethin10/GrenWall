@@ -1,141 +1,113 @@
-import { useEffect, useRef } from 'react';
-import { ArrowDown } from 'lucide-react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
 import { useReducedMotion } from '../lib/useReducedMotion';
 import { links } from '../tokens';
+
+const FluidRevealCanvas = lazy(() =>
+  import('./FluidRevealCanvas').then((module) => ({ default: module.FluidRevealCanvas })),
+);
 
 interface HeroProps {
   introDone: boolean;
 }
 
-/**
- * Full-viewport opening statement. The motto is the headline — two masked
- * lines rising after the preloader curtain lifts, a quiet subline, and a
- * meta row pinned to the bottom edge. No imagery: the emptiness is the
- * design.
- */
+const brandLetters = Array.from('GRENWALL');
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 18 12" aria-hidden="true">
+      <path d="M1 6h15M11.5 1.5 16 6l-4.5 4.5" />
+    </svg>
+  );
+}
+
 export function Hero({ introDone }: HeroProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const restRefs = useRef<(HTMLElement | null)[]>([]);
+  const rootRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    const lines = lineRefs.current.filter(Boolean) as HTMLElement[];
-    const rest = restRefs.current.filter(Boolean) as HTMLElement[];
-
+    const root = rootRef.current;
+    if (!root) return;
+    const letters = root.querySelectorAll<HTMLElement>('[data-brand-letter]');
+    const details = root.querySelectorAll<HTMLElement>('[data-hero-detail]');
     if (reducedMotion) {
-      gsap.set([...lines, ...rest], { yPercent: 0, y: 0, opacity: 1 });
+      gsap.set([...letters, ...details], { opacity: 1, yPercent: 0, y: 0 });
       return;
     }
-
     if (!introDone) {
-      gsap.set(lines, { yPercent: 115 });
-      gsap.set(rest, { opacity: 0, y: 14 });
+      gsap.set(letters, { yPercent: 0, rotate: 0 });
+      gsap.set(details, { opacity: 1, y: 0 });
       return;
     }
-
-    const tl = gsap.timeline();
-    tl.to(lines, { yPercent: 0, duration: 1.2, stagger: 0.1 }, 0).to(
-      rest,
-      { opacity: 1, y: 0, duration: 1, stagger: 0.08 },
-      0.55,
-    );
-
+    gsap.set(letters, { yPercent: 115, rotate: 2 });
+    gsap.set(details, { opacity: 0, y: 12 });
+    const timeline = gsap.timeline();
+    timeline
+      .to(details, { opacity: 1, y: 0, duration: 0.9, stagger: 0.06 }, 0.05)
+      .to(letters, { yPercent: 0, rotate: 0, duration: 1.25, stagger: 0.045 }, 0.22);
     return () => {
-      tl.kill();
+      timeline.kill();
     };
   }, [introDone, reducedMotion]);
 
-  // Slow parallax out as you leave the hero — content drifts up and dims.
-  useEffect(() => {
-    if (reducedMotion) return;
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-      gsap.to('[data-hero-inner]', {
-        yPercent: -10,
-        opacity: 0.15,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: 'bottom 25%',
-          scrub: true,
-        },
-      });
-    }, section);
-
-    return () => ctx.revert();
-  }, [reducedMotion]);
-
-  const setLineRef = (i: number) => (el: HTMLSpanElement | null) => {
-    lineRefs.current[i] = el;
-  };
-  const setRestRef = (i: number) => (el: HTMLElement | null) => {
-    restRefs.current[i] = el;
-  };
-
   return (
-    <section
-      ref={sectionRef}
-      id="hero"
-      className="relative flex min-h-[100svh] w-full flex-col justify-between overflow-hidden"
-    >
-      <div
-        data-hero-inner
-        className="flex min-h-[100svh] w-full flex-col justify-between px-5 pb-8 pt-24 md:px-10 md:pt-28"
-      >
-        {/* Eyebrow row */}
-        <div ref={setRestRef(0)} className="flex items-center justify-between" style={{ opacity: 0 }}>
-          <span className="label-mono">AI Automation Studio</span>
-          <span className="label-mono hidden md:inline">Agents &amp; Workflows</span>
-        </div>
-
-        {/* The statement */}
-        <div className="py-14">
-          <h1 className="text-display text-[color:var(--fg)]">
-            <span className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
-              <span ref={setLineRef(0)} className="block">
-                If the work repeats,
-              </span>
-            </span>
-            <span className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
-              <span ref={setLineRef(1)} className="text-faint block">
-                it can be automated.
-              </span>
-            </span>
-          </h1>
-
-          <p ref={setRestRef(1)} className="text-body text-muted mt-10 max-w-md" style={{ opacity: 0 }}>
-            Grenwall designs and builds AI agents and automations that take the
-            repetitive work off your team&rsquo;s hands — for any business, at any
-            scale.
-          </p>
-        </div>
-
-        {/* Bottom meta row */}
-        <div ref={setRestRef(2)} className="rule flex items-end justify-between border-t pt-6" style={{ opacity: 0 }}>
-          <span className="label-mono">Working worldwide</span>
-          <a
-            href="#problem"
-            data-cursor-hover
-            className="label-mono inline-flex items-center gap-2"
-            aria-label="Scroll to next section"
+    <section ref={rootRef} id="home" className="hero">
+      <div className="hero-media" data-hero-media aria-hidden="true">
+        {reducedMotion ? (
+          <img
+            src="/video/grenwall-material-poster.jpg"
+            alt=""
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+          />
+        ) : (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster="/video/grenwall-material-poster.jpg"
           >
-            Scroll
-            <ArrowDown className="h-3 w-3" aria-hidden="true" />
-          </a>
-          <a
-            href={links.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor-hover
-            className="label-mono link-line hidden md:inline"
-          >
-            {links.whatsappPhoneDisplay}
-          </a>
+            <source src="/video/grenwall-material-loop.mp4" type="video/mp4" />
+          </video>
+        )}
+      </div>
+
+      <div className="hero-reveal-surface">
+        <div className="hero-word" aria-label="Grenwall">
+          {brandLetters.map((letter, index) => (
+            <span className="hero-letter-mask" key={`${letter}-${index}`} aria-hidden="true">
+              <span data-brand-letter>{letter}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {!reducedMotion ? (
+        <Suspense fallback={null}>
+          <FluidRevealCanvas activationDelay={4200} />
+        </Suspense>
+      ) : null}
+
+      <div className="hero-copy" data-hero-detail>
+        <h1>
+          We build intelligence into the work.<br />
+          Because repetition should disappear.
+        </h1>
+        <a className="hero-cta" href={links.whatsapp} target="_blank" rel="noreferrer">
+          Book a call <ArrowIcon />
+        </a>
+      </div>
+
+      <div className="hero-bottom" data-hero-detail>
+        <span>AI systems studio in India</span>
+        <div>
+          <a href="#systems">LinkedIn</a>
+          <i>/</i>
+          <a href="#contact">Instagram</a>
+          <b>EN</b>
         </div>
       </div>
     </section>
