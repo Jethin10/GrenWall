@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
-  <rect width="48" height="48" rx="10" fill="#08080A"/>
-  <path d="M33 16.2C30.6 13.5 27.5 12 24 12c-6.6 0-12 5.4-12 12s5.4 12 12 12c5.6 0 10.3-3.9 11.6-9.1H23.3v-4.2H40c.1.7.1 1.5.1 2.3 0 8.8-6.6 15.8-16.1 15.8C14.3 40.8 7 33.5 7 24S14.3 7.2 24.1 7.2c5 0 9 1.9 12 4.9L33 16.2z" fill="#D8823A"/>
+  <!-- Grenwall brand mark: the gold four-point star from the GREN*WALL logotype -->
+  <rect width="48" height="48" rx="10" fill="#0A0A0A"/>
+  <defs>
+    <linearGradient id="g" x1="14" y1="10" x2="34" y2="38" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#EDD27C"/>
+      <stop offset="0.48" stop-color="#C9A23A"/>
+      <stop offset="1" stop-color="#7E5E17"/>
+    </linearGradient>
+  </defs>
+  <path d="M24 6C25.98 16.74 31.26 22.02 42 24C31.26 25.98 25.98 31.26 24 42C22.02 31.26 16.74 25.98 6 24C16.74 22.02 22.02 16.74 24 6Z" fill="url(#g)"/>
+  <path d="M24 6C22.02 16.74 16.74 22.02 6 24C16.74 25.98 22.02 31.26 24 42Z" fill="#fff" opacity="0.2"/>
 </svg>
