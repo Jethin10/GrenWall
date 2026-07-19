@@ -4,13 +4,9 @@ import { SmoothScroll } from './components/SmoothScroll';
 import { Preloader } from './components/Preloader';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
-import {
-  Capabilities,
-  Contact,
-  Manifesto,
-  Process,
-  SelectedSystems,
-} from './components/EditorialSections';
+import { Marquee } from './components/Marquee';
+import { Contact, CursorSheen, Fit, Method, Offer, WorldBand } from './components/PremiumSections';
+import { copy } from './tokens';
 
 function App() {
   const [introDone, setIntroDone] = useState(false);
@@ -28,10 +24,16 @@ function App() {
       <main>
         <Hero introDone={introDone} />
         <div className="dark-shell">
-          <Manifesto />
-          <Capabilities />
-          <SelectedSystems />
-          <Process />
+          <Marquee text={copy.motto} />
+          <Offer />
+        </div>
+        <div className="light-shell">
+          <CursorSheen />
+          <Method />
+          <Fit />
+        </div>
+        <div className="dark-shell">
+          <WorldBand />
           <Contact />
         </div>
       </main>

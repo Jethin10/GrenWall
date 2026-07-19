@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
+import { useIsMobile } from '../lib/useIsMobile';
 import { useReducedMotion } from '../lib/useReducedMotion';
 import { links } from '../tokens';
 
@@ -11,7 +12,7 @@ interface HeroProps {
   introDone: boolean;
 }
 
-const brandLetters = Array.from('GRENWALL');
+const brandRows = ['GREN', 'WALL'];
 
 function ArrowIcon() {
   return (
@@ -24,6 +25,7 @@ function ArrowIcon() {
 export function Hero({ introDone }: HeroProps) {
   const rootRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
+  const isMobile = useIsMobile(901);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -31,7 +33,7 @@ export function Hero({ introDone }: HeroProps) {
     const letters = root.querySelectorAll<HTMLElement>('[data-brand-letter]');
     const details = root.querySelectorAll<HTMLElement>('[data-hero-detail]');
     if (reducedMotion) {
-      gsap.set([...letters, ...details], { opacity: 1, yPercent: 0, y: 0 });
+      gsap.set(Array.from(letters).concat(Array.from(details)), { opacity: 1, yPercent: 0, y: 0 });
       return;
     }
     if (!introDone) {
@@ -77,37 +79,55 @@ export function Hero({ introDone }: HeroProps) {
 
       <div className="hero-reveal-surface">
         <div className="hero-word" aria-label="Grenwall">
-          {brandLetters.map((letter, index) => (
-            <span className="hero-letter-mask" key={`${letter}-${index}`} aria-hidden="true">
-              <span data-brand-letter>{letter}</span>
-            </span>
-          ))}
+          {isMobile
+            ? brandRows.map((row) => (
+                <span className="hero-letter-mask hero-row-mask" key={row} aria-hidden="true">
+                  <span className="hero-word-row" data-brand-letter>
+                    {row}
+                  </span>
+                </span>
+              ))
+            : brandRows.map((row) =>
+                Array.from(row).map((letter, index) => (
+                  <span className="hero-letter-mask" key={`${row}-${letter}-${index}`} aria-hidden="true">
+                    <span data-brand-letter>{letter}</span>
+                  </span>
+                )),
+              )}
         </div>
       </div>
 
       {!reducedMotion ? (
         <Suspense fallback={null}>
-          <FluidRevealCanvas activationDelay={4200} />
+          <FluidRevealCanvas activationDelay={isMobile ? 1800 : 4200} />
         </Suspense>
       ) : null}
 
       <div className="hero-copy" data-hero-detail>
         <h1>
           We build intelligence into the work.<br />
-          Because repetition should disappear.
+          <em className="serif-accent">because repetition should disappear.</em>
         </h1>
         <a className="hero-cta" href={links.whatsapp} target="_blank" rel="noreferrer">
           Book a call <ArrowIcon />
         </a>
       </div>
 
+      <p className="hero-lede" data-hero-detail>
+        We design and run the agents and automations that take repeating work off your
+        team — support, follow-ups, operations.
+      </p>
+
+      <span className="hero-hint" aria-hidden="true">
+        {isMobile ? 'Drag across the name' : 'Run your cursor through the name'}
+      </span>
+
       <div className="hero-bottom" data-hero-detail>
         <span>AI systems studio in India</span>
         <div>
-          <a href="#systems">LinkedIn</a>
+          <a href={links.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a>
           <i>/</i>
-          <a href="#contact">Instagram</a>
-          <b>EN</b>
+          <a href="mailto:hello@grenwall.ai">Email</a>
         </div>
       </div>
     </section>

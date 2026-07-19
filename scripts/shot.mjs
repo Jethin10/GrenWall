@@ -20,8 +20,8 @@ page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
 
 await page.goto(URL, { waitUntil: 'networkidle0', timeout: 30000 });
 
-// Let the preloader finish (~3.5s) and the hero settle.
-await new Promise((r) => setTimeout(r, 6500));
+// Let the preloader finish (~2.5s) and the hero + silk canvas settle.
+await new Promise((r) => setTimeout(r, 7000));
 await page.screenshot({ path: 'scripts/shot-hero.png' });
 
 const height = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);

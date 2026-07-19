@@ -9,9 +9,96 @@
       content="Grenwall designs and builds AI agents, workflow automations and AI-native products for ambitious teams."
     />
     <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Grenwall" />
     <meta property="og:title" content="Grenwall — AI Systems Studio" />
     <meta property="og:description" content="We build intelligence into the work, so repetition can disappear." />
+    <meta property="og:image" content="https://grenwall.ai/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://grenwall.ai/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Grenwall — AI Systems Studio" />
+    <meta name="twitter:description" content="We build intelligence into the work, so repetition can disappear." />
+    <meta name="twitter:image" content="https://grenwall.ai/og-image.jpg" />
+    <link rel="canonical" href="https://grenwall.ai/" />
     <title>Grenwall — AI Systems Studio</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://grenwall.ai/#organization",
+            "name": "Grenwall",
+            "url": "https://grenwall.ai/",
+            "logo": "https://grenwall.ai/og-image.jpg",
+            "description": "Grenwall designs and builds AI agents, workflow automations and AI-native products for ambitious teams.",
+            "areaServed": "Worldwide",
+            "knowsAbout": [
+              "AI agents",
+              "Workflow automation",
+              "Custom AI products"
+            ],
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "IN"
+            },
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "hello@grenwall.ai",
+              "contactType": "sales",
+              "availableLanguage": "English"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://grenwall.ai/#website",
+            "url": "https://grenwall.ai/",
+            "name": "Grenwall — AI Systems Studio",
+            "publisher": { "@id": "https://grenwall.ai/#organization" }
+          },
+          {
+            "@type": "ProfessionalService",
+            "name": "Grenwall AI Systems",
+            "image": "https://grenwall.ai/og-image.jpg",
+            "url": "https://grenwall.ai/",
+            "parentOrganization": { "@id": "https://grenwall.ai/#organization" },
+            "areaServed": "Worldwide",
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Services",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "AI Agents",
+                    "description": "Support, sales, and ops handoffs that run without waiting on a person."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Workflow Automation",
+                    "description": "End-to-end flows across the tools you already use."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Custom AI Products",
+                    "description": "Software with intelligence at the core, shipped to production."
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

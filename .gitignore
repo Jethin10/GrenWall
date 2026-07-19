@@ -25,3 +25,16 @@ dist-ssr
 
 # dev screenshot artifacts
 scripts/*.png
+scripts/_tmp-*.mjs
+# one-off agent debug capture scripts — shot.mjs and shot-mobile.mjs are the keepers
+scripts/shot-*.mjs
+!scripts/shot-mobile.mjs
+scripts/inspect-hero.mjs
+
+# local agent/session artifacts
+.claude/
+.codex-*.log
+.tmp_frames/
+
+# design concept explorations (not needed to build the site)
+design/

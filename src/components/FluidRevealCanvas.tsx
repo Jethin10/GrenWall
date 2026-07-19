@@ -16,7 +16,6 @@ import {
   WebGLRenderer,
   WebGLRenderTarget,
 } from 'three';
-import { useIsMobile } from '../lib/useIsMobile';
 import { useReducedMotion } from '../lib/useReducedMotion';
 
 const PASS_VERTEX = `
@@ -191,6 +190,8 @@ uniform float uEdgeSoftness;
 uniform float uEdgeWidth;
 uniform float uRevealImageAspect;
 uniform float uPlaneAspect;
+uniform float uFitContain;
+uniform float uContainCenterY;
 
 varying vec2 vUv;
 
@@ -205,9 +206,25 @@ vec2 coverUv(vec2 uv, float imageAspect, float planeAspect) {
   );
 }
 
+vec2 containUv(vec2 uv, float imageAspect, float planeAspect, float centerY) {
+  vec2 ratio = vec2(
+    max(planeAspect / imageAspect, 1.0),
+    max(imageAspect / planeAspect, 1.0)
+  );
+  return vec2(
+    (uv.x - 0.5) * ratio.x + 0.5,
+    (uv.y - centerY) * ratio.y + 0.5
+  );
+}
+
 void main() {
   vec4 baseColor = texture2D(uBaseTexture, vUv);
-  vec2 revealUv = coverUv(vUv, uRevealImageAspect, uPlaneAspect);
+  vec2 revealUv = uFitContain > 0.5
+    ? containUv(vUv, uRevealImageAspect, uPlaneAspect, uContainCenterY)
+    : coverUv(vUv, uRevealImageAspect, uPlaneAspect);
+  // Outside the contain-fitted frame the clamp repeats the video's edge
+  // pixels (a near-black surround), so the reveal keeps organic fluid
+  // edges everywhere instead of hard-cropping to a rectangle.
   vec4 revealColor = texture2D(uRevealTexture, clamp(revealUv, 0.001, 0.999));
   float dye = texture2D(uDye, vUv).r;
   float raw = dye * uRevealSize;
@@ -292,8 +309,8 @@ function paintBaseLayer(root: HTMLElement, target: HTMLCanvasElement, drawingBuf
   context.fillRect(0, 0, bounds.width, bounds.height);
 
   const word = root.querySelector<HTMLElement>('.hero-word');
-  const letters = Array.from(root.querySelectorAll<HTMLElement>('[data-brand-letter]'));
-  if (!word || letters.length === 0) return;
+  const masks = Array.from(root.querySelectorAll<HTMLElement>('.hero-letter-mask'));
+  if (!word || masks.length === 0) return;
 
   const style = getComputedStyle(word);
   const fontSize = Number.parseFloat(style.fontSize) || bounds.width * 0.16;
@@ -302,19 +319,32 @@ function paintBaseLayer(root: HTMLElement, target: HTMLCanvasElement, drawingBuf
   context.textAlign = 'left';
   context.textBaseline = 'alphabetic';
 
-  for (const letter of letters) {
-    const value = letter.textContent ?? '';
-    const letterBounds = letter.getBoundingClientRect();
-    const metrics = context.measureText(value);
-    const measuredWidth = Math.max(metrics.width, 1);
-    const ascent = metrics.actualBoundingBoxAscent || fontSize * 0.75;
-    const descent = metrics.actualBoundingBoxDescent || fontSize * 0.2;
-    const glyphHeight = ascent + descent;
-    const baseline = letterBounds.top - bounds.top + (letterBounds.height - glyphHeight) * 0.5 + ascent;
-    const horizontalScale = Math.max(0.2, letterBounds.width / measuredWidth);
+  // Shared vertical metrics from the full wordmark so every mask sits on the
+  // same baseline — per-glyph overshoots (e.g. the round G) would otherwise
+  // nudge rows or letters a pixel apart.
+  const values = masks.map(
+    (mask) => mask.querySelector<HTMLElement>('[data-brand-letter]')?.textContent ?? '',
+  );
+  const fullMetrics = context.measureText(values.join(''));
+  const ascent = fullMetrics.actualBoundingBoxAscent || fontSize * 0.75;
+  const descent = fullMetrics.actualBoundingBoxDescent || fontSize * 0.2;
+  const glyphHeight = ascent + descent;
+
+  // Measure the static mask wrappers, not the letter spans: the intro tween
+  // translates the spans inside the masks, so a paint that lands mid-flight
+  // would otherwise freeze the letters at animated offsets.
+  for (const [index, mask] of masks.entries()) {
+    const value = values[index];
+    if (!value) continue;
+    const maskBounds = mask.getBoundingClientRect();
+    const paddingBottom = Number.parseFloat(getComputedStyle(mask).paddingBottom) || 0;
+    const restHeight = maskBounds.height - paddingBottom;
+    const measuredWidth = Math.max(context.measureText(value).width, 1);
+    const baseline = maskBounds.top - bounds.top + (restHeight - glyphHeight) * 0.5 + ascent;
+    const horizontalScale = Math.max(0.2, maskBounds.width / measuredWidth);
 
     context.save();
-    context.translate(letterBounds.left - bounds.left, 0);
+    context.translate(maskBounds.left - bounds.left, 0);
     context.scale(horizontalScale, 1);
     context.fillText(value, 0, baseline);
     context.restore();
@@ -324,13 +354,14 @@ function paintBaseLayer(root: HTMLElement, target: HTMLCanvasElement, drawingBuf
 export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reducedMotion = useReducedMotion();
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || reducedMotion || isMobile || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    if (!canvas || reducedMotion) {
       return;
     }
+
+    const coarsePointer = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     let cleanup: (() => void) | undefined;
     let cancelled = false;
@@ -357,7 +388,7 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
       }
 
       renderer.setClearColor(0x000000, 0);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarsePointer ? 1.4 : 1.75));
       renderer.autoClear = false;
 
       const scene = new Scene();
@@ -440,6 +471,11 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
           uEdgeWidth: { value: SETTINGS.edgeWidth },
           uRevealImageAspect: { value: video?.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : 16 / 9 },
           uPlaneAspect: { value: 1 },
+          // Touch viewports are portrait, so a cover fit crops the 16:9
+          // material video to an unreadable zoomed slice. Contain scales the
+          // full frame to fit, banded around the wordmark.
+          uFitContain: { value: coarsePointer ? 1 : 0 },
+          uContainCenterY: { value: 0.5 },
         },
         transparent: false,
         premultipliedAlpha: false,
@@ -474,7 +510,22 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
       const resize = () => {
         const bounds = root.getBoundingClientRect();
         renderer.setSize(Math.max(1, bounds.width), Math.max(1, bounds.height), false);
-        compositeMaterial.uniforms.uPlaneAspect.value = bounds.width / bounds.height;
+        const planeAspect = bounds.width / bounds.height;
+        compositeMaterial.uniforms.uPlaneAspect.value = planeAspect;
+        if (coarsePointer) {
+          const word = root.querySelector<HTMLElement>('.hero-word');
+          if (word && bounds.height > 0) {
+            const wordBounds = word.getBoundingClientRect();
+            const centerY =
+              1 - (wordBounds.top + wordBounds.height / 2 - bounds.top) / bounds.height;
+            const imageAspect = compositeMaterial.uniforms.uRevealImageAspect.value as number;
+            const halfBand = 0.5 * Math.min(planeAspect / imageAspect, 1);
+            compositeMaterial.uniforms.uContainCenterY.value = Math.min(
+              1 - halfBand,
+              Math.max(halfBand, centerY),
+            );
+          }
+        }
         renderer.getDrawingBufferSize(drawingBuffer);
         paintBaseLayer(root, baseCanvas, drawingBuffer);
         baseTexture.needsUpdate = true;
@@ -483,6 +534,20 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
       resize();
       const resizeObserver = new ResizeObserver(resize);
       resizeObserver.observe(root);
+      // fonts.ready can resolve before the wordmark face has even STARTED
+      // loading, leaving the base layer painted with fallback-font metrics
+      // (rows misaligned, wrong widths). Force-load the exact face the
+      // wordmark uses and repaint once it is really available to the canvas.
+      const wordElement = root.querySelector<HTMLElement>('.hero-word');
+      if (wordElement) {
+        const wordStyle = getComputedStyle(wordElement);
+        document.fonts
+          .load(`${wordStyle.fontWeight} ${wordStyle.fontSize} ${wordStyle.fontFamily}`)
+          .then(() => {
+            if (!cancelled) resize();
+          })
+          .catch(() => undefined);
+      }
       document.fonts.ready.then(() => {
         if (!cancelled) resize();
       });
@@ -498,6 +563,15 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
       ensureVideoPlayback();
       video?.addEventListener('loadeddata', ensureVideoPlayback);
       video?.addEventListener('canplay', ensureVideoPlayback);
+
+      // On touch the video is contain-fitted around the wordmark (see
+      // uFitContain) and the hero copy difference-blends to white under the
+      // dark material, so the reveal can stay generous; only the splat is
+      // slightly tighter to suit finger-sized drags.
+      const revealSize = SETTINGS.revealSize;
+      const splatRadius = coarsePointer ? SETTINGS.splatRadius * 0.8 : SETTINGS.splatRadius;
+      const dyeDissipation = coarsePointer ? 0.985 : SETTINGS.dyeDissipation;
+      compositeMaterial.uniforms.uRevealSize.value = revealSize;
 
       const pointer = { x: 0.5, y: 0.5 };
       const previousPointer = { x: 0.5, y: 0.5 };
@@ -526,11 +600,16 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
         pointerMoved = true;
       };
       const onPointerMove = (event: PointerEvent) => {
-        if (event.pointerType === 'touch') return;
         updatePointer(event);
+      };
+      const onTouchMove = (event: TouchEvent) => {
+        const touch = event.touches[0];
+        if (!touch) return;
+        updatePointer({ clientX: touch.clientX, clientY: touch.clientY } as MouseEvent);
       };
       root.addEventListener('mousemove', updatePointer, { passive: true });
       root.addEventListener('pointermove', onPointerMove, { passive: true });
+      root.addEventListener('touchmove', onTouchMove, { passive: true });
 
       let visible = true;
       const intersectionObserver = new IntersectionObserver(([entry]) => {
@@ -561,7 +640,7 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
                 (deltaY / samples) * SETTINGS.splatForce,
                 0,
               );
-              splatMaterial.uniforms.uRadius.value = SETTINGS.splatRadius;
+              splatMaterial.uniforms.uRadius.value = splatRadius;
               renderPass(splatMaterial, velocity.write);
               velocity.swap();
 
@@ -587,7 +666,7 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
               splatMaterial.uniforms.uTarget.value = dye.read.texture;
               splatMaterial.uniforms.uPoint.value.set(satelliteX, satelliteY);
               splatMaterial.uniforms.uColor.value.set(0.78, 0.78, 0.78);
-              splatMaterial.uniforms.uRadius.value = SETTINGS.splatRadius * 0.12;
+              splatMaterial.uniforms.uRadius.value = splatRadius * 0.12;
               renderPass(splatMaterial, dye.write);
               dye.swap();
             }
@@ -615,7 +694,7 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
         advectionMaterial.uniforms.uVelocity.value = velocity.read.texture;
         advectionMaterial.uniforms.uSource.value = dye.read.texture;
         advectionMaterial.uniforms.uTexelSize.value = dyeTexel;
-        advectionMaterial.uniforms.uDissipation.value = SETTINGS.dyeDissipation;
+        advectionMaterial.uniforms.uDissipation.value = dyeDissipation;
         renderPass(advectionMaterial, dye.write);
         dye.swap();
 
@@ -668,6 +747,7 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
         cancelAnimationFrame(animationFrame);
         root.removeEventListener('mousemove', updatePointer);
         root.removeEventListener('pointermove', onPointerMove);
+        root.removeEventListener('touchmove', onTouchMove);
         video?.removeEventListener('loadeddata', ensureVideoPlayback);
         video?.removeEventListener('canplay', ensureVideoPlayback);
         intersectionObserver.disconnect();
@@ -704,7 +784,7 @@ export function FluidRevealCanvas({ activationDelay = 1350 }: FluidRevealCanvasP
       window.clearTimeout(activationTimer);
       cleanup?.();
     };
-  }, [activationDelay, isMobile, reducedMotion]);
+  }, [activationDelay, reducedMotion]);
 
   return <canvas ref={canvasRef} className="hero-fluid-canvas" aria-hidden="true" />;
 }
