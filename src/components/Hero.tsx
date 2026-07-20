@@ -127,7 +127,7 @@ export function Hero({ introDone }: HeroProps) {
         <div>
           <a href={links.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a>
           <i>/</i>
-          <a href="mailto:hello@grenwall.ai">Email</a>
+          <a href="mailto:hello@grenwall.org">Email</a>
         </div>
       </div>
     </section>

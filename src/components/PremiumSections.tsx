@@ -828,8 +828,8 @@ export function Contact() {
             <a href={links.whatsapp} target="_blank" rel="noreferrer">
               <ArrowIcon /> WhatsApp
             </a>
-            <a href="mailto:hello@grenwall.ai">
-              <ArrowIcon /> hello@grenwall.ai
+            <a href="mailto:hello@grenwall.org">
+              <ArrowIcon /> hello@grenwall.org
             </a>
           </div>
         </div>

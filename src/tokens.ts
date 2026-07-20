@@ -42,7 +42,7 @@ export const links = {
   whatsapp:
     "https://wa.me/918008794433?text=Hi%20Grenwall%2C%20I%27d%20like%20to%20talk%20about%20AI%20automation%20for%20my%20business",
   whatsappPhoneDisplay: '+91 80087 94433',
-  email: 'hello@grenwall.ai',
+  email: 'hello@grenwall.org',
   instagram: 'https://www.instagram.com/grenwall.ai/',
   linkedin: 'https://www.linkedin.com/company/grenwall',
 } as const;
