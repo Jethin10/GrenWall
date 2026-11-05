@@ -1,5 +1,38 @@
 # Grenwall — Website
 
+## Craftflow page
+
+`/craftflow` is the design and digital marketing page. Run `npm run dev` and open
+`http://localhost:5173/craftflow` to preview it locally. Its content and additional
+styles live in `src/pages/Craftflow.tsx` and `src/pages/craftflow.css`. It uses
+Grenwall's font families, palette and star mark with its own hero, navigation,
+service sections and contact layout.
+
+The hero in `CraftflowHero.tsx` pairs an editorial headline with a contact sheet of
+original design studies. `CraftflowBoard.tsx` draws the board in the Grenwall
+palette. "Break the grid" separates the composition; "Bring it together" restores
+it. Pointer input adds a small perspective shift, with no continuous rendering
+loop or WebGL in the hero. Open a tile for the full study, then close it with
+Escape or follow the project link. Keyboard focus, touch and reduced motion
+are supported. `CraftflowStudies.tsx` draws the enlarged artwork and
+`craftflow-studies.ts` contains its labels. These are studio concepts, not
+claimed client work.
+
+The signature "In motion" section in `CraftflowPlayground.tsx` morphs particle
+typography through idea, form and impact. Desktop scroll and chapter buttons
+control the story; pointer/touch input scatters the letters. It pauses offscreen
+and in background tabs. Mobile and short screens use an unpinned layout, while
+reduced motion uses static type with the same chapter controls. Page choreography
+lives in `useCraftflowMotion.ts` and respects reduced motion too.
+
+Art-direction references: [Obys](https://obys.agency/) for typography and
+[Lusion](https://lusion.co/) for interactive brand storytelling. All Craftflow
+artwork and interaction code are original to this page.
+
+`npm run build` also generates `dist/craftflow/index.html` with page-specific
+metadata so static hosts can serve `/craftflow/` directly. Publish the complete
+`dist` folder only when ready. Building and previewing do not publish anything.
+
 A tight, single-page site for **Grenwall** (automation studio), built to the caliber of
 `steven.com`'s loading intro and `podium.global`'s everything-else — around one idea, start to
 finish: the intro gathers a **black hole**, the hero *is* that black hole, its gravity threads

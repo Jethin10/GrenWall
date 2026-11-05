@@ -884,6 +884,7 @@ export function Contact() {
         <div className="site-footer__col site-footer__meta">
           <p className="site-footer__head">Studio</p>
           <span>India / Working globally</span>
+          <a href="/craftflow">Craftflow / Design studio</a>
           <a href="#home">Back to top ↑</a>
         </div>
       </div>
