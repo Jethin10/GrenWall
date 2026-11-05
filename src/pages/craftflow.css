@@ -1,0 +1,1462 @@
+.cf-page {
+  --cf-paper: #f7f8fa;
+  --cf-ink: #20262f;
+  --cf-blue: #2445f3;
+  --cf-muted: #686e79;
+  --cf-line: #d9dce3;
+  --cf-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  background: var(--cf-paper);
+  color: var(--cf-ink);
+  font-family: "Inter Variable", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  isolation: isolate;
+  overflow: clip;
+}
+.cf-page * {
+  box-sizing: border-box;
+}
+.cf-page button {
+  cursor: pointer;
+}
+.cf-page button,
+.cf-page a {
+  -webkit-tap-highlight-color: transparent;
+}
+.cf-page svg:not(.cf-artwork) {
+  flex-shrink: 0;
+}
+.cf-page a:focus-visible,
+.cf-page button:focus-visible {
+  outline: 3px solid var(--cf-blue);
+  outline-offset: 6px;
+}
+.cf-page ::selection {
+  background: #dce2ff;
+  color: #14258e;
+}
+.cf-page p,
+.cf-page h1,
+.cf-page h2,
+.cf-page h3 {
+  margin: 0;
+}
+.cf-page button {
+  font: inherit;
+}
+.cf-page [hidden] {
+  display: none !important;
+}
+.cf-page section {
+  scroll-margin-top: 24px;
+}
+.cf-mark {
+  width: 25px;
+  height: 25px;
+}
+.cf-skip {
+  position: fixed;
+  left: 16px;
+  top: -90px;
+  z-index: 100;
+  background: var(--cf-blue);
+  color: white;
+  padding: 14px 24px;
+  border-radius: 5px;
+}
+.cf-skip:focus {
+  top: 16px;
+}
+.cf-header {
+  display: flex;
+  align-items: center;
+  gap: 38px;
+  padding: 28px 4%;
+  position: relative;
+  z-index: 5;
+}
+.cf-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 29px;
+  font-weight: 650;
+  letter-spacing: -1.8px;
+  line-height: 1;
+}
+.cf-logo > .cf-mark {
+  color: var(--cf-blue);
+  width: 35px;
+  height: 35px;
+}
+.cf-logo-period {
+  font-size: 10px;
+  vertical-align: top;
+  display: inline-block;
+  letter-spacing: 0;
+  margin: 2px 0 0 3px;
+}
+.cf-parent {
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--cf-muted);
+  border-left: 1px solid var(--cf-line);
+  padding-left: 23px;
+}
+.cf-nav {
+  margin-left: auto;
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  font-size: 12px;
+}
+.cf-nav > a {
+  transition: color 0.2s;
+}
+.cf-nav > a:hover {
+  color: var(--cf-blue);
+}
+.cf-nav .cf-nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 12px 18px;
+  background: var(--cf-ink);
+  color: white;
+  border-radius: 30px;
+  margin-left: 14px;
+  transition: background 0.2s;
+}
+.cf-nav .cf-nav-cta:hover {
+  background: var(--cf-blue);
+  color: white;
+}
+.cf-nav-cta svg {
+  width: 17px;
+  height: 17px;
+}
+.cf-menu-toggle {
+  display: none;
+}
+.cf-hero {
+  padding: 62px 4% 0;
+}
+.cf-hero-heading {
+  display: grid;
+  grid-template-columns: 1fr 270px;
+  gap: 45px;
+  align-items: end;
+  padding-bottom: 48px;
+}
+.cf-hero h1 {
+  font-size: clamp(65px, 8.3vw, 150px);
+  line-height: 0.96;
+  font-weight: 550;
+  letter-spacing: -0.055em;
+}
+.cf-hero-intro {
+  padding-bottom: 5px;
+}
+.cf-status {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 10px;
+}
+.cf-status > span {
+  width: 6px;
+  height: 6px;
+  background: var(--cf-blue);
+  border-radius: 50%;
+}
+.cf-hero-intro p {
+  font-size: 20px;
+  letter-spacing: -0.7px;
+  line-height: 1.4;
+  max-width: 245px;
+  margin: 17px 0 23px;
+}
+.cf-text-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  padding-bottom: 7px;
+  border-bottom: 1px solid currentColor;
+  transition: color 0.2s;
+}
+.cf-text-link:hover {
+  color: var(--cf-blue);
+}
+.cf-text-link svg {
+  width: 17px;
+  height: 17px;
+}
+.cf-featured {
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--cf-ink);
+}
+.cf-featured-art {
+  width: 100%;
+  display: block;
+  position: relative;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
+.cf-artwork {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s var(--cf-ease);
+}
+.cf-featured-art > .cf-artwork {
+  height: auto;
+  aspect-ratio: 1600/720;
+}
+.cf-art-open {
+  position: absolute;
+  bottom: 28px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 13px 18px;
+  background: #f7f8faee;
+  color: var(--cf-ink);
+  border-radius: 30px;
+  font-size: 11px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px #0000000a;
+  transition: background 0.2s;
+}
+.cf-art-open svg {
+  width: 17px;
+  height: 17px;
+}
+.cf-featured-art:hover .cf-art-open {
+  background: white;
+}
+.cf-featured-art:hover > .cf-artwork {
+  transform: scale(1.012);
+}
+.cf-featured-controls {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  color: white;
+  padding: 19px 25px;
+  min-height: 76px;
+}
+.cf-featured-controls > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+.cf-featured-controls strong {
+  font-weight: 550;
+  font-size: 14px;
+}
+.cf-featured-controls > div:first-child > span {
+  font-size: 10px;
+  color: #b4bbc6;
+}
+.cf-concept-note {
+  margin-left: auto;
+  font-size: 10px;
+  color: #b4bbc6;
+}
+.cf-project-tabs {
+  display: flex;
+  gap: 14px;
+  margin-left: 20px;
+}
+.cf-project-tabs button {
+  min-width: 30px;
+  min-height: 44px;
+  background: transparent;
+  color: #c4c9d1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 10px;
+}
+.cf-project-tabs i {
+  width: 13px;
+  height: 2px;
+  background: #5b626f;
+  transition:
+    width 0.35s var(--cf-ease),
+    background 0.35s;
+}
+.cf-project-tabs [aria-selected="true"] {
+  color: white;
+}
+.cf-project-tabs [aria-selected="true"] i {
+  width: 37px;
+  background: #eaf393;
+}
+.cf-hero-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0;
+  color: var(--cf-muted);
+  font-size: 10px;
+}
+.cf-hero-foot a {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  color: var(--cf-ink);
+}
+.cf-hero-foot svg {
+  width: 17px;
+  height: 17px;
+}
+.cf-section {
+  padding: 105px 4%;
+}
+.cf-section-name {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 11px;
+}
+.cf-section-name .cf-mark {
+  width: 17px;
+  height: 17px;
+  color: var(--cf-blue);
+}
+.cf-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 30px;
+}
+.cf-section-heading > span:last-child {
+  font-size: 10px;
+  color: var(--cf-muted);
+}
+.cf-page h2 {
+  font-size: clamp(42px, 5vw, 82px);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 1.04;
+}
+.cf-studio {
+  padding-top: 92px;
+}
+.cf-studio-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12%;
+  margin: 56px 0 65px;
+}
+.cf-studio-body > div {
+  max-width: 480px;
+}
+.cf-studio-body .cf-lead {
+  font-size: 25px;
+  line-height: 1.35;
+  letter-spacing: -0.8px;
+  color: var(--cf-ink);
+  margin-bottom: 24px;
+}
+.cf-studio-body p {
+  color: var(--cf-muted);
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+.cf-studio-body .cf-text-link {
+  margin-top: 10px;
+}
+.cf-studio-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--cf-line);
+  padding: 37px 0 0;
+}
+.cf-studio-bottom > span {
+  font-size: 10px;
+  color: var(--cf-muted);
+}
+.cf-studio-bottom > span:last-child {
+  text-align: right;
+}
+.cf-studio-signature {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 35px;
+  line-height: 0.95;
+  letter-spacing: -1px;
+  transform: rotate(-7deg);
+  position: relative;
+}
+.cf-studio-signature .cf-mark {
+  position: absolute;
+  right: -50px;
+  top: 8px;
+  color: var(--cf-blue);
+  width: 34px;
+  height: 34px;
+}
+.cf-work {
+  background: #eceff3;
+  padding-top: 83px;
+  padding-bottom: 55px;
+}
+.cf-work-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 30px;
+  margin-bottom: 45px;
+}
+.cf-work-heading h2 {
+  margin-top: 28px;
+}
+.cf-work-heading > p {
+  font-size: 12px;
+  color: var(--cf-muted);
+  line-height: 1.7;
+  margin-bottom: 4px;
+}
+.cf-work-grid {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 30px;
+  align-items: start;
+}
+.cf-work-item--forme {
+  padding-top: 110px;
+}
+.cf-work-art {
+  display: block;
+  position: relative;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #28483f;
+}
+.cf-work-art > .cf-artwork {
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.cf-work-item--forme .cf-work-art > .cf-artwork {
+  aspect-ratio: 0.88;
+}
+.cf-round-arrow {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.35s var(--cf-ease);
+}
+.cf-round-arrow svg {
+  width: 20px;
+  height: 20px;
+}
+.cf-work-art:hover .cf-round-arrow {
+  transform: rotate(45deg);
+}
+.cf-work-art:hover > .cf-artwork {
+  transform: scale(1.035);
+}
+.cf-work-caption {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 17px;
+}
+.cf-work-caption h3 {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.7px;
+}
+.cf-work-caption > span {
+  font-size: 10px;
+  color: var(--cf-muted);
+}
+.cf-work-caption > span:last-child {
+  margin-left: auto;
+  font-size: 9px;
+}
+.cf-work-note {
+  margin-top: 55px;
+  border-top: 1px solid #d0d5de;
+  padding-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+.cf-work-note > span {
+  font-size: 11px;
+  color: var(--cf-muted);
+}
+.cf-services {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 10%;
+  padding-top: 110px;
+  padding-bottom: 110px;
+}
+.cf-services h2 {
+  margin: 30px 0 25px;
+}
+.cf-services-intro > p {
+  font-size: 12px;
+  color: var(--cf-muted);
+  line-height: 1.7;
+  margin-bottom: 27px;
+}
+.cf-service-list {
+  padding-top: 45px;
+}
+.cf-service {
+  border-top: 1px solid var(--cf-line);
+}
+.cf-service:last-child {
+  border-bottom: 1px solid var(--cf-line);
+}
+.cf-service h3 {
+  font-weight: 500;
+}
+.cf-service h3 button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  width: 100%;
+  padding: 30px 0;
+  text-align: left;
+  background: transparent;
+  font-size: clamp(20px, 2.1vw, 32px);
+  letter-spacing: -1px;
+  line-height: 1.25;
+}
+.cf-service h3 button > span {
+  max-width: 340px;
+}
+.cf-service h3 button > svg {
+  width: 21px;
+  height: 21px;
+}
+.cf-service h3 small {
+  display: block;
+  font-size: 10px;
+  color: var(--cf-muted);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.5;
+  margin-bottom: 13px;
+}
+.cf-service.is-open h3 {
+  color: var(--cf-blue);
+}
+.cf-service-details {
+  padding: 0 45px 32px 0;
+}
+.cf-service-details p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--cf-muted);
+  max-width: 46ch;
+}
+.cf-service-details ul {
+  list-style: none;
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 22px 0 0;
+}
+.cf-service-details li {
+  font-size: 10px;
+  padding: 6px 11px;
+  border-radius: 3px;
+  background: #e9ecf2;
+  color: #535b69;
+}
+.cf-process {
+  border-top: 1px solid var(--cf-line);
+  padding-top: 75px;
+  padding-bottom: 90px;
+}
+.cf-process .cf-section-heading h2 {
+  font-size: clamp(35px, 4vw, 60px);
+  margin-right: 12%;
+}
+.cf-process-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6%;
+  margin-top: 60px;
+}
+.cf-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--cf-line);
+  padding-bottom: 16px;
+  font-size: 11px;
+  color: var(--cf-muted);
+}
+.cf-step-number svg {
+  width: 18px;
+  height: 18px;
+  color: var(--cf-blue);
+}
+.cf-process-steps > div:last-child .cf-step-number svg {
+  transform: rotate(-45deg);
+}
+.cf-process-steps h3 {
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: -0.7px;
+  margin: 23px 0 12px;
+}
+.cf-process-steps p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--cf-muted);
+  max-width: 36ch;
+}
+.cf-contact {
+  background: var(--cf-blue);
+  color: #f5f7ff;
+  padding-top: 55px;
+  padding-bottom: 35px;
+}
+.cf-contact-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+.cf-contact .cf-section-name .cf-mark {
+  color: #eaf393;
+}
+.cf-contact-top > a {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 11px;
+}
+.cf-contact-top > a svg {
+  width: 16px;
+  height: 16px;
+}
+.cf-contact-body {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 9%;
+  margin-top: 60px;
+}
+.cf-contact h2 {
+  font-size: clamp(56px, 7vw, 110px);
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+.cf-contact-options > p {
+  font-size: 17px;
+  line-height: 1.6;
+  letter-spacing: -0.3px;
+  max-width: 29ch;
+}
+.cf-contact-options fieldset {
+  padding: 0;
+  border: 0;
+  margin: 30px 0;
+}
+.cf-contact-options legend {
+  font-size: 10px;
+  color: #d6ddff;
+  margin-bottom: 12px;
+}
+.cf-contact-options fieldset > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cf-contact-options fieldset button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 30px;
+  border: 1px solid #a6b4ff80;
+  padding: 10px 14px;
+  background: transparent;
+  color: white;
+  font-size: 11px;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.cf-contact-options fieldset button[aria-pressed="true"] {
+  background: #eaf393;
+  border-color: #eaf393;
+  color: #1d2e70;
+}
+.cf-contact-options fieldset svg {
+  width: 13px;
+  height: 13px;
+}
+.cf-contact-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f4f6ff;
+  color: #1f37b3;
+  padding: 19px 22px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 550;
+  transition: background 0.2s;
+}
+.cf-contact-button:hover {
+  background: #eaf393;
+}
+.cf-contact-button svg {
+  width: 20px;
+  height: 20px;
+}
+.cf-contact-options > small {
+  display: block;
+  font-size: 9px;
+  line-height: 1.6;
+  color: #d1d9ff;
+  margin-top: 12px;
+  max-width: 42ch;
+}
+.cf-contact-email {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 55px;
+  padding-top: 23px;
+  border-top: 1px solid #ffffff40;
+  min-height: 60px;
+}
+.cf-contact-email > a {
+  font-size: 16px;
+  letter-spacing: -0.4px;
+}
+.cf-contact-email > button {
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: #d1d9ff;
+  padding: 8px;
+}
+.cf-contact-email svg {
+  width: 15px;
+  height: 15px;
+}
+.cf-contact-email > span {
+  font-size: 10px;
+  color: #d1d9ff;
+}
+.cf-contact a:focus-visible,
+.cf-contact button:focus-visible {
+  outline-color: #eaf393;
+}
+.cf-footer {
+  padding: 35px 4% 23px;
+  background: #e9ecf2;
+}
+.cf-footer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+}
+.cf-footer-top a {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.cf-footer-top svg,
+.cf-footer-bottom svg {
+  width: 15px;
+  height: 15px;
+}
+.cf-footer-wordmark {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3%;
+  font-weight: 600;
+  font-size: clamp(80px, 18.6vw, 340px);
+  letter-spacing: -0.06em;
+  line-height: 1.25;
+  color: var(--cf-blue);
+  margin: 20px 0 25px;
+}
+.cf-footer-wordmark > .cf-mark {
+  width: 12vw;
+  height: 12vw;
+  max-width: 210px;
+  max-height: 210px;
+  margin-top: 2vw;
+}
+.cf-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid #c8ceda;
+  padding-top: 20px;
+  font-size: 9px;
+  color: #626b79;
+}
+.cf-footer-bottom a {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  color: var(--cf-ink);
+}
+.cf-project-dialog {
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: var(--cf-paper);
+  color: var(--cf-ink);
+  width: min(1040px, 92vw);
+  max-height: 90dvh;
+  margin: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 30px 100px #0004;
+}
+.cf-project-dialog::backdrop {
+  background: #151c30b3;
+  backdrop-filter: blur(8px);
+}
+.cf-dialog-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 24px;
+  font-size: 10px;
+  position: sticky;
+  top: 0;
+  background: var(--cf-paper);
+  z-index: 1;
+}
+.cf-dialog-bar button {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 8px 0;
+  background: transparent;
+  font-size: 11px;
+}
+.cf-dialog-bar svg {
+  width: 18px;
+  height: 18px;
+}
+.cf-project-detail > .cf-artwork {
+  aspect-ratio: 1600/720;
+  height: auto;
+}
+.cf-dialog-copy {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10%;
+  padding: 40px;
+}
+.cf-dialog-copy > div > span {
+  font-size: 10px;
+  color: var(--cf-muted);
+}
+.cf-dialog-copy h2 {
+  margin: 14px 0 16px;
+  font-size: 58px;
+}
+.cf-dialog-idea {
+  font-size: 22px;
+  letter-spacing: -0.6px;
+  line-height: 1.35;
+  max-width: 20ch;
+}
+.cf-dialog-copy > div:last-child > p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--cf-muted);
+}
+.cf-dialog-copy ul {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 20px 0;
+}
+.cf-dialog-copy li {
+  font-size: 9px;
+  background: #e4e8ee;
+  padding: 6px 10px;
+  border-radius: 20px;
+}
+.cf-dialog-copy small {
+  font-size: 10px;
+  color: var(--cf-muted);
+  display: block;
+  margin-bottom: 22px;
+}
+.cf-dialog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-top: 1px solid var(--cf-line);
+}
+.cf-dialog-pagination button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  background: transparent;
+  padding: 8px 0;
+}
+.cf-dialog-pagination svg {
+  width: 17px;
+  height: 17px;
+}
+@media (min-width: 1700px) {
+  .cf-header,
+  .cf-hero,
+  .cf-section,
+  .cf-footer {
+    padding-left: max(4%, calc((100vw - 1660px) / 2));
+    padding-right: max(4%, calc((100vw - 1660px) / 2));
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cf-hero-heading {
+    animation: cf-enter 0.8s var(--cf-ease) both;
+  }
+  .cf-featured {
+    animation: cf-enter 1s 0.1s var(--cf-ease) both;
+  }
+  @keyframes cf-enter {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+@media (max-width: 1000px) {
+  .cf-header {
+    gap: 23px;
+  }
+  .cf-nav {
+    gap: 23px;
+  }
+  .cf-parent {
+    padding-left: 18px;
+  }
+  .cf-hero {
+    padding-top: 45px;
+  }
+  .cf-hero-heading {
+    grid-template-columns: 1fr 230px;
+    gap: 28px;
+  }
+  .cf-hero h1 {
+    font-size: 8.1vw;
+  }
+  .cf-hero-intro p {
+    font-size: 17px;
+  }
+  .cf-section {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  .cf-studio-body {
+    gap: 7%;
+  }
+  .cf-work-grid {
+    gap: 22px;
+  }
+  .cf-work-item--forme {
+    padding-top: 80px;
+  }
+  .cf-work-caption {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .cf-work-caption > span:last-child {
+    display: none;
+  }
+  .cf-services {
+    gap: 8%;
+  }
+  .cf-contact-body {
+    gap: 5%;
+  }
+  .cf-process .cf-section-heading h2 {
+    margin-right: 5%;
+  }
+}
+@media (max-width: 700px) {
+  .cf-header {
+    padding: 22px 6%;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .cf-logo {
+    font-size: 26px;
+    gap: 8px;
+  }
+  .cf-logo > .cf-mark {
+    width: 29px;
+    height: 29px;
+  }
+  .cf-parent {
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    font-size: 8px;
+  }
+  .cf-menu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-left: 7px;
+    background: transparent;
+    padding: 10px 0 10px 10px;
+    font-size: 11px;
+  }
+  .cf-menu-toggle svg {
+    width: 17px;
+    height: 17px;
+  }
+  .cf-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--cf-paper);
+    border-bottom: 1px solid var(--cf-line);
+    padding: 20px 6% 30px;
+    display: none;
+    font-size: 20px;
+    box-shadow: 0 20px 30px #20262f0a;
+  }
+  .cf-nav.is-open {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+  .cf-nav > a {
+    padding: 12px 0;
+  }
+  .cf-nav .cf-nav-cta {
+    margin: 10px 0 0;
+    justify-content: space-between;
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+  .cf-hero {
+    padding: 40px 6% 0;
+  }
+  .cf-hero-heading {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    padding-bottom: 30px;
+  }
+  .cf-hero h1 {
+    font-size: clamp(53px, 11.3vw, 79px);
+    letter-spacing: -0.055em;
+    line-height: 1.01;
+  }
+  .cf-hero-intro {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 0 18px;
+  }
+  .cf-status {
+    grid-column: 1/-1;
+    font-size: 9px;
+  }
+  .cf-hero-intro p {
+    font-size: 15px;
+    max-width: 23ch;
+    margin: 12px 0 0;
+    letter-spacing: -0.3px;
+  }
+  .cf-hero-intro .cf-text-link {
+    font-size: 9px;
+    gap: 8px;
+    margin-bottom: 3px;
+  }
+  .cf-hero-intro .cf-text-link svg {
+    width: 14px;
+    height: 14px;
+  }
+  .cf-featured-art > .cf-artwork {
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+  .cf-art-open {
+    right: 15px;
+    bottom: 15px;
+    padding: 10px 13px;
+    font-size: 9px;
+    gap: 10px;
+  }
+  .cf-art-open svg {
+    width: 14px;
+    height: 14px;
+  }
+  .cf-featured-controls {
+    padding: 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .cf-featured-controls > div:first-child {
+    display: block;
+  }
+  .cf-featured-controls strong {
+    font-size: 12px;
+    display: block;
+  }
+  .cf-featured-controls > div:first-child > span {
+    font-size: 8px;
+    display: block;
+    margin-top: 4px;
+  }
+  .cf-concept-note {
+    display: none;
+  }
+  .cf-project-tabs {
+    margin-left: auto;
+    gap: 8px;
+  }
+  .cf-project-tabs button {
+    font-size: 8px;
+    gap: 5px;
+  }
+  .cf-project-tabs i {
+    width: 7px;
+  }
+  .cf-project-tabs [aria-selected="true"] i {
+    width: 20px;
+  }
+  .cf-hero-foot {
+    font-size: 8px;
+    padding: 18px 0;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .cf-hero-foot p {
+    max-width: 23ch;
+  }
+  .cf-hero-foot a {
+    gap: 8px;
+    text-align: right;
+    max-width: 18ch;
+  }
+  .cf-hero-foot svg {
+    width: 14px;
+    height: 14px;
+  }
+  .cf-section {
+    padding: 65px 6%;
+  }
+  .cf-section-heading > span:last-child {
+    display: none;
+  }
+  .cf-section-name {
+    font-size: 10px;
+    gap: 8px;
+  }
+  .cf-section-name .cf-mark {
+    width: 15px;
+    height: 15px;
+  }
+  .cf-page h2 {
+    font-size: clamp(39px, 9.2vw, 60px);
+    line-height: 1.07;
+  }
+  .cf-studio-body {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin: 32px 0 35px;
+  }
+  .cf-studio-body .cf-lead {
+    font-size: 23px;
+    margin-bottom: 20px;
+    max-width: 24ch;
+  }
+  .cf-studio-body p {
+    font-size: 14px;
+    max-width: 46ch;
+  }
+  .cf-studio-body .cf-text-link {
+    font-size: 10px;
+  }
+  .cf-studio-bottom {
+    padding-top: 28px;
+    gap: 12px;
+  }
+  .cf-studio-bottom > span {
+    font-size: 8px;
+    max-width: 11ch;
+  }
+  .cf-studio-signature {
+    font-size: 26px;
+  }
+  .cf-studio-signature .cf-mark {
+    width: 22px;
+    height: 22px;
+    right: -28px;
+  }
+  .cf-work-heading {
+    display: block;
+    margin-bottom: 28px;
+  }
+  .cf-work-heading h2 {
+    margin: 23px 0 22px;
+  }
+  .cf-work-heading > p {
+    font-size: 11px;
+  }
+  .cf-work-grid {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  .cf-work-item--forme {
+    padding-top: 0;
+  }
+  .cf-work-item--forme .cf-work-art > .cf-artwork {
+    aspect-ratio: 1;
+  }
+  .cf-work-caption {
+    margin-top: 13px;
+    gap: 15px;
+  }
+  .cf-work-caption h3 {
+    font-size: 20px;
+  }
+  .cf-work-caption > span {
+    font-size: 9px;
+  }
+  .cf-work-note {
+    display: block;
+    margin-top: 30px;
+    padding-top: 22px;
+  }
+  .cf-work-note > span {
+    font-size: 10px;
+  }
+  .cf-work-note .cf-text-link {
+    margin-top: 16px;
+    font-size: 11px;
+  }
+  .cf-services {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .cf-services h2 {
+    font-size: 48px;
+    max-width: 360px;
+  }
+  .cf-services h2 br:nth-child(2) {
+    display: none;
+  }
+  .cf-services-intro > p {
+    font-size: 12px;
+  }
+  .cf-service-list {
+    padding-top: 0;
+  }
+  .cf-service h3 button {
+    font-size: 24px;
+    padding: 25px 0;
+    letter-spacing: -0.8px;
+  }
+  .cf-service-details {
+    padding-right: 20px;
+  }
+  .cf-process .cf-section-heading {
+    display: block;
+  }
+  .cf-process .cf-section-heading h2 {
+    margin: 25px 0 0;
+    font-size: 39px;
+  }
+  .cf-process-steps {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-top: 35px;
+  }
+  .cf-step-number {
+    padding-bottom: 12px;
+  }
+  .cf-process-steps h3 {
+    margin-top: 17px;
+    font-size: 21px;
+  }
+  .cf-process-steps p {
+    max-width: 43ch;
+  }
+  .cf-contact {
+    padding-top: 35px;
+    padding-bottom: 25px;
+  }
+  .cf-contact-top > a {
+    font-size: 9px;
+    gap: 6px;
+  }
+  .cf-contact-body {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-top: 35px;
+  }
+  .cf-contact h2 {
+    font-size: 60px;
+    letter-spacing: -0.06em;
+  }
+  .cf-contact-options > p {
+    font-size: 16px;
+    max-width: 30ch;
+  }
+  .cf-contact-options fieldset {
+    margin: 25px 0;
+  }
+  .cf-contact-options fieldset button {
+    padding: 10px 14px;
+    font-size: 11px;
+  }
+  .cf-contact-email {
+    margin-top: 30px;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 17px;
+  }
+  .cf-contact-email > a {
+    font-size: 15px;
+  }
+  .cf-contact-email > span {
+    font-size: 9px;
+  }
+  .cf-footer {
+    padding: 27px 6% 20px;
+  }
+  .cf-footer-top {
+    font-size: 9px;
+  }
+  .cf-footer-top a {
+    gap: 8px;
+  }
+  .cf-footer-wordmark {
+    font-size: 18.4vw;
+    margin: 30px 0;
+    line-height: 1;
+  }
+  .cf-footer-wordmark > .cf-mark {
+    width: 11vw;
+    height: 11vw;
+  }
+  .cf-footer-bottom {
+    font-size: 8px;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cf-footer-bottom > span:nth-child(2) {
+    display: none;
+  }
+  .cf-footer-bottom a {
+    margin-left: auto;
+    gap: 5px;
+  }
+  .cf-footer-bottom svg {
+    width: 12px;
+    height: 12px;
+  }
+  .cf-project-dialog {
+    width: 94vw;
+    max-height: 92dvh;
+  }
+  .cf-dialog-bar {
+    padding: 10px 17px;
+    font-size: 9px;
+  }
+  .cf-project-detail > .cf-artwork {
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+  .cf-dialog-copy {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 25px;
+  }
+  .cf-dialog-copy h2 {
+    font-size: 48px;
+  }
+  .cf-dialog-idea {
+    font-size: 21px;
+    max-width: 23ch;
+  }
+  .cf-dialog-copy .cf-text-link {
+    font-size: 10px;
+  }
+  .cf-dialog-pagination {
+    padding: 15px 25px;
+  }
+  .cf-dialog-pagination button {
+    font-size: 10px;
+  }
+  .cf-dialog-copy small {
+    font-size: 9px;
+  }
+}
+@media (max-width: 370px) {
+  .cf-parent {
+    display: none;
+  }
+  .cf-hero-intro {
+    grid-template-columns: 1fr;
+  }
+  .cf-hero-intro .cf-text-link {
+    justify-self: start;
+    margin-top: 18px;
+  }
+  .cf-hero h1 {
+    font-size: 12vw;
+  }
+  .cf-contact h2 {
+    font-size: 53px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-page *,
+  .cf-page *::before,
+  .cf-page *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

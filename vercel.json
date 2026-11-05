@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/craftflow", "destination": "/craftflow/index.html" }
+  ]
+}
